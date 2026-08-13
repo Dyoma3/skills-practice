@@ -1,0 +1,7 @@
+{
+  "setup": [
+    "cp /Users/dinko/skills-practice/.env.test .env.test\ncp /Users/dinko/skills-practice/.env .env\nnpm ci"
+  ],
+  "teardown": [],
+  "run": []
+}
