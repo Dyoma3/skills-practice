@@ -1,0 +1,77 @@
+import { test } from '@japa/runner'
+import testUtils from '@adonisjs/core/services/test_utils'
+import { mcpOAuth } from '#lib/oauth/mcp'
+import { createUser } from '#tests/helpers/user'
+
+const claudeRedirectUri = 'https://claude.ai/api/mcp/auth_callback'
+
+function authorizationPayload(overrides: Record<string, unknown> = {}) {
+  return {
+    response_type: 'code',
+    client_id: 'claude',
+    redirect_uri: claudeRedirectUri,
+    scope: 'mcp:read mcp:write',
+    state: 'state-123',
+    code_challenge: 'a'.repeat(43),
+    code_challenge_method: 'S256',
+    resource: mcpOAuth.resource,
+    ...overrides,
+  }
+}
+
+function getRedirectUrl(redirectTo: string | undefined) {
+  if (!redirectTo) throw new Error('Expected redirect_to response field')
+  return new URL(redirectTo)
+}
+
+test.group('POST /oauth/authorize/deny', (group) => {
+  group.each.setup(() => testUtils.db().wrapInGlobalTransaction())
+
+  test('requires authentication', async ({ client }) => {
+    const response = await client.post('/oauth/authorize/deny').json(authorizationPayload())
+
+    response.assertStatus(401)
+  })
+
+  test('rejects clients outside the static allowlist', async ({ client }) => {
+    const user = await createUser()
+    const response = await client
+      .post('/oauth/authorize/deny')
+      .loginAs(user)
+      .json(authorizationPayload({ client_id: 'unknown-client' }))
+
+    response.assertStatus(400)
+    response.assertBodyContains({ error: 'invalid_client' })
+  })
+
+  test('rejects redirect URIs outside the client allowlist', async ({ client }) => {
+    const user = await createUser()
+    const response = await client
+      .post('/oauth/authorize/deny')
+      .loginAs(user)
+      .json(authorizationPayload({ redirect_uri: 'https://attacker.example/oauth/callback' }))
+
+    response.assertStatus(400)
+    response.assertBodyContains({
+      error: 'invalid_request',
+      error_description: 'Invalid redirect_uri',
+    })
+  })
+
+  test('returns an access_denied redirect and preserves state', async ({ client, assert }) => {
+    const user = await createUser()
+    const response = await client
+      .post('/oauth/authorize/deny')
+      .loginAs(user)
+      .json(authorizationPayload())
+
+    response.assertStatus(200)
+
+    const redirectUrl = getRedirectUrl(response.body().redirect_to)
+
+    assert.equal(redirectUrl.origin + redirectUrl.pathname, claudeRedirectUri)
+    assert.equal(redirectUrl.searchParams.get('error'), 'access_denied')
+    assert.equal(redirectUrl.searchParams.get('state'), 'state-123')
+    assert.isNull(redirectUrl.searchParams.get('code'))
+  })
+})

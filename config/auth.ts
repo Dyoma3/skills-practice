@@ -21,6 +21,16 @@ const authConfig = defineConfig({
     }),
 
     /**
+     * OAuth tokens are isolated from regular API access tokens.
+     */
+    mcp: tokensGuard({
+      provider: tokensUserProvider({
+        tokens: 'mcpAccessTokens',
+        model: () => import('#models/user'),
+      }),
+    }),
+
+    /**
      * Session-based guard for browser authentication.
      */
     web: sessionGuard({

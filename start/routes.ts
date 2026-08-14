@@ -35,3 +35,20 @@ router
       .use(middleware.auth())
   })
   .prefix('/api/v1')
+
+router.get('.well-known/oauth-protected-resource/mcp', [
+  controllers.Oauth,
+  'getMcpProtectedResource',
+])
+
+router.get('.well-known/oauth-authorization-server', [controllers.Oauth, 'getAuthorizationServer'])
+
+router
+  .group(() => {
+    router.post('token', [controllers.Oauth, 'token'])
+    router
+      .post('authorize/approve', [controllers.Oauth, 'approveAuthorization'])
+      .use(middleware.auth())
+    router.post('authorize/deny', [controllers.Oauth, 'denyAuthorization']).use(middleware.auth())
+  })
+  .prefix('oauth')
