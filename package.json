@@ -37,6 +37,7 @@
     "#start/*": "./start/*.js",
     "#config/*": "./config/*.js",
     "#lib/*": "./lib/*.js",
+    "#mcp/*": "./app/mcp/*.js",
     "#types/*": "./types/*.js"
   },
   "devDependencies": {

@@ -90,6 +90,11 @@ export default defineConfig({
         name: 'functional',
         timeout: 30000,
       },
+      {
+        files: ['tests/mcp/**/*.spec.{ts,js}'],
+        name: 'mcp',
+        timeout: 30000,
+      },
     ],
     forceExit: false,
   },
