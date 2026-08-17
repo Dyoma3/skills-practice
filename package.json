@@ -69,6 +69,7 @@
     "@modelcontextprotocol/sdk": "^1.30.0",
     "@tuyau/core": "^1.2.2",
     "@vinejs/vine": "^4.4.0",
+    "edge.js": "^6.5.1",
     "luxon": "^3.7.2",
     "pg": "^8.23.0",
     "reflect-metadata": "^0.2.2",

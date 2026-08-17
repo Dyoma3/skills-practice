@@ -3,7 +3,8 @@ import User from '#models/user'
 
 export function createUser() {
   return User.create({
-    fullName: 'OAuth Test User',
+    firstName: 'OAuth',
+    lastName: 'Test User',
     email: `oauth-${randomUUID()}@example.com`,
     password: 'password123',
   })

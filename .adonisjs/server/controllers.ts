@@ -9,4 +9,5 @@ export const controllers = {
   NewAccount: () => import('#controllers/new_account_controller'),
   Oauth: () => import('#controllers/oauth_controller'),
   Profile: () => import('#controllers/profile_controller'),
+  WebSessions: () => import('#controllers/web_sessions_controller'),
 }

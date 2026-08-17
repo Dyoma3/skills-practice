@@ -43,17 +43,66 @@ export class AuthAccessTokenSchema extends BaseModel {
   declare updatedAt: DateTime | null
 }
 
+export class OauthAuthorizationCodeSchema extends BaseModel {
+  static $columns = [
+    'clientId',
+    'codeChallenge',
+    'codeChallengeMethod',
+    'codeHash',
+    'createdAt',
+    'expiresAt',
+    'id',
+    'redirectUri',
+    'resource',
+    'scopes',
+    'userId',
+  ] as const
+  $columns = OauthAuthorizationCodeSchema.$columns
+  @column()
+  declare clientId: string
+  @column()
+  declare codeChallenge: string
+  @column()
+  declare codeChallengeMethod: string
+  @column()
+  declare codeHash: string
+  @column.dateTime({ autoCreate: true })
+  declare createdAt: DateTime
+  @column.dateTime()
+  declare expiresAt: DateTime
+  @column({ isPrimary: true })
+  declare id: number
+  @column()
+  declare redirectUri: string
+  @column()
+  declare resource: string
+  @column()
+  declare scopes: any
+  @column()
+  declare userId: number
+}
+
 export class UserSchema extends BaseModel {
-  static $columns = ['createdAt', 'email', 'fullName', 'id', 'password', 'updatedAt'] as const
+  static $columns = [
+    'createdAt',
+    'email',
+    'firstName',
+    'id',
+    'lastName',
+    'password',
+    'updatedAt',
+  ] as const
   $columns = UserSchema.$columns
   @column.dateTime({ autoCreate: true })
   declare createdAt: DateTime
   @column()
   declare email: string
   @column()
-  declare fullName: string | null
+  declare firstName: string | null
   @column({ isPrimary: true })
   declare id: number
+  @column()
+  declare lastName: string | null
   @column({ serializeAs: null })
   declare password: string
   @column.dateTime({ autoCreate: true, autoUpdate: true })

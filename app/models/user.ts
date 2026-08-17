@@ -5,7 +5,10 @@ import { withAuthFinder } from '@adonisjs/auth/mixins/lucid'
 import { type AccessToken, DbAccessTokensProvider } from '@adonisjs/auth/access_tokens'
 import { AuthTokenTypes } from '#types/index'
 
-export default class User extends compose(UserSchema, withAuthFinder(hash)) {
+export default class User extends compose(
+  UserSchema,
+  withAuthFinder(() => hash.use())
+) {
   static accessTokens = DbAccessTokensProvider.forModel(User)
   static mcpAccessTokens = DbAccessTokensProvider.forModel(User, {
     type: AuthTokenTypes.Mcp,
@@ -13,10 +16,14 @@ export default class User extends compose(UserSchema, withAuthFinder(hash)) {
   declare currentAccessToken?: AccessToken
 
   get initials() {
-    const [first, last] = this.fullName ? this.fullName.split(' ') : this.email.split('@')
-    if (first && last) {
-      return `${first.charAt(0)}${last.charAt(0)}`.toUpperCase()
+    if (this.firstName && this.lastName) {
+      return `${this.firstName.charAt(0)}${this.lastName.charAt(0)}`.toUpperCase()
     }
-    return `${first.slice(0, 2)}`.toUpperCase()
+
+    const name = this.firstName || this.lastName
+    if (name) return name.slice(0, 2).toUpperCase()
+
+    const [localPart, domain] = this.email.split('@')
+    return `${localPart.charAt(0)}${domain.charAt(0)}`.toUpperCase()
   }
 }

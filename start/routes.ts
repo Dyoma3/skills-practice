@@ -17,6 +17,20 @@ router.get('/', () => {
 
 router
   .group(() => {
+    router.get('login', [controllers.WebSessions, 'show']).as('web.login')
+    router.post('login', [controllers.WebSessions, 'store']).as('web.login.store')
+  })
+  .use(middleware.guest({ guards: ['web'] }))
+
+router
+  .group(() => {
+    router.get('account', [controllers.WebSessions, 'account']).as('web.account')
+    router.post('logout', [controllers.WebSessions, 'destroy']).as('web.logout')
+  })
+  .use(middleware.webAuth())
+
+router
+  .group(() => {
     router
       .group(() => {
         router.post('signup', [controllers.NewAccount, 'store'])
