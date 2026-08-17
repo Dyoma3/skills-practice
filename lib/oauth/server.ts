@@ -3,7 +3,7 @@ import { getOAuthSupportedScopes } from '#lib/oauth/resources'
 
 export const oauthServer = {
   issuer: env.get('APP_URL'),
-  authorizationEndpoint: `${env.get('FRONTEND_URL')}/oauth/authorize`,
+  authorizationEndpoint: `${env.get('APP_URL')}/oauth/authorize`,
   tokenEndpoint: `${env.get('APP_URL')}/oauth/token`,
   tokenEndpointAuthMethods: ['none'],
   responseTypes: ['code'],

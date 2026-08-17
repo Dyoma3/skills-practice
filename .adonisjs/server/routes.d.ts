@@ -12,6 +12,7 @@ export type ScannedRoutes = {
     'oauth.get_mcp_protected_resource': { paramsTuple?: []; params?: {} }
     'oauth.get_authorization_server': { paramsTuple?: []; params?: {} }
     'oauth.token': { paramsTuple?: []; params?: {} }
+    'oauth.show_authorization': { paramsTuple?: []; params?: {} }
     'oauth.approve_authorization': { paramsTuple?: []; params?: {} }
     'oauth.deny_authorization': { paramsTuple?: []; params?: {} }
   }
@@ -21,6 +22,7 @@ export type ScannedRoutes = {
     'mcps': { paramsTuple?: []; params?: {} }
     'oauth.get_mcp_protected_resource': { paramsTuple?: []; params?: {} }
     'oauth.get_authorization_server': { paramsTuple?: []; params?: {} }
+    'oauth.show_authorization': { paramsTuple?: []; params?: {} }
   }
   HEAD: {
     'web.login': { paramsTuple?: []; params?: {} }
@@ -28,6 +30,7 @@ export type ScannedRoutes = {
     'mcps': { paramsTuple?: []; params?: {} }
     'oauth.get_mcp_protected_resource': { paramsTuple?: []; params?: {} }
     'oauth.get_authorization_server': { paramsTuple?: []; params?: {} }
+    'oauth.show_authorization': { paramsTuple?: []; params?: {} }
   }
   POST: {
     'web.login.store': { paramsTuple?: []; params?: {} }

@@ -54,6 +54,12 @@ const routes = {
     tokens: [{"old":"/oauth/token","type":0,"val":"oauth","end":""},{"old":"/oauth/token","type":0,"val":"token","end":""}],
     types: placeholder as Registry['oauth.token']['types'],
   },
+  'oauth.show_authorization': {
+    methods: ["GET","HEAD"],
+    pattern: '/oauth/authorize',
+    tokens: [{"old":"/oauth/authorize","type":0,"val":"oauth","end":""},{"old":"/oauth/authorize","type":0,"val":"authorize","end":""}],
+    types: placeholder as Registry['oauth.show_authorization']['types'],
+  },
   'oauth.approve_authorization': {
     methods: ["POST"],
     pattern: '/oauth/authorize/approve',

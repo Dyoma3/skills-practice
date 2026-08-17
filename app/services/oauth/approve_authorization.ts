@@ -85,21 +85,21 @@ export default class OauthApproveAuthorizationService {
   }
 
   private redirectWithInvalidScope(payload: ApproveAuthorizationPayload) {
-    return this.ctx.response.ok({
-      redirect_to: this.buildRedirectUrl(payload.redirect_uri, {
+    return this.ctx.response.redirect(
+      this.buildRedirectUrl(payload.redirect_uri, {
         error: 'invalid_scope',
         state: payload.state,
-      }),
-    })
+      })
+    )
   }
 
   private redirectWithAuthorizationCode(payload: ApproveAuthorizationPayload, code: string) {
-    return this.ctx.response.ok({
-      redirect_to: this.buildRedirectUrl(payload.redirect_uri, {
+    return this.ctx.response.redirect(
+      this.buildRedirectUrl(payload.redirect_uri, {
         code,
         state: payload.state,
-      }),
-    })
+      })
+    )
   }
 
   private async issueAuthorizationCode(

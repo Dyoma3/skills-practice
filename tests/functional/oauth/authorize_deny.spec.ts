@@ -19,26 +19,34 @@ function authorizationPayload(overrides: Record<string, unknown> = {}) {
   }
 }
 
-function getRedirectUrl(redirectTo: string | undefined) {
-  if (!redirectTo) throw new Error('Expected redirect_to response field')
-  return new URL(redirectTo)
+function getRedirectUrl(location: string | undefined) {
+  if (!location) throw new Error('Expected Location response header')
+  return new URL(location)
 }
 
 test.group('POST /oauth/authorize/deny', (group) => {
   group.each.setup(() => testUtils.db().wrapInGlobalTransaction())
 
   test('requires authentication', async ({ client }) => {
-    const response = await client.post('/oauth/authorize/deny').json(authorizationPayload())
+    const response = await client
+      .post('/oauth/authorize/deny')
+      .redirects(0)
+      .withCsrfToken()
+      .form(authorizationPayload())
 
-    response.assertStatus(401)
+    response.assertStatus(302)
+    response.assertHeader('location', '/login')
   })
 
   test('rejects clients outside the static allowlist', async ({ client }) => {
     const user = await createUser()
     const response = await client
       .post('/oauth/authorize/deny')
+      .redirects(0)
+      .withGuard('web')
       .loginAs(user)
-      .json(authorizationPayload({ client_id: 'unknown-client' }))
+      .withCsrfToken()
+      .form(authorizationPayload({ client_id: 'unknown-client' }))
 
     response.assertStatus(400)
     response.assertBodyContains({ error: 'invalid_client' })
@@ -48,8 +56,11 @@ test.group('POST /oauth/authorize/deny', (group) => {
     const user = await createUser()
     const response = await client
       .post('/oauth/authorize/deny')
+      .redirects(0)
+      .withGuard('web')
       .loginAs(user)
-      .json(authorizationPayload({ redirect_uri: 'https://attacker.example/oauth/callback' }))
+      .withCsrfToken()
+      .form(authorizationPayload({ redirect_uri: 'https://attacker.example/oauth/callback' }))
 
     response.assertStatus(400)
     response.assertBodyContains({
@@ -62,12 +73,15 @@ test.group('POST /oauth/authorize/deny', (group) => {
     const user = await createUser()
     const response = await client
       .post('/oauth/authorize/deny')
+      .redirects(0)
+      .withGuard('web')
       .loginAs(user)
-      .json(authorizationPayload())
+      .withCsrfToken()
+      .form(authorizationPayload())
 
-    response.assertStatus(200)
+    response.assertStatus(302)
 
-    const redirectUrl = getRedirectUrl(response.body().redirect_to)
+    const redirectUrl = getRedirectUrl(response.header('location'))
 
     assert.equal(redirectUrl.origin + redirectUrl.pathname, claudeRedirectUri)
     assert.equal(redirectUrl.searchParams.get('error'), 'access_denied')

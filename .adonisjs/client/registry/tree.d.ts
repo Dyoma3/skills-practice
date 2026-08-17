@@ -14,6 +14,7 @@ export interface ApiDefinition {
     getMcpProtectedResource: typeof routes['oauth.get_mcp_protected_resource']
     getAuthorizationServer: typeof routes['oauth.get_authorization_server']
     token: typeof routes['oauth.token']
+    showAuthorization: typeof routes['oauth.show_authorization']
     approveAuthorization: typeof routes['oauth.approve_authorization']
     denyAuthorization: typeof routes['oauth.deny_authorization']
   }

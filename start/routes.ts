@@ -42,8 +42,11 @@ router
   .group(() => {
     router.post('token', [controllers.Oauth, 'token'])
     router
-      .post('authorize/approve', [controllers.Oauth, 'approveAuthorization'])
-      .use(middleware.auth())
-    router.post('authorize/deny', [controllers.Oauth, 'denyAuthorization']).use(middleware.auth())
+      .group(() => {
+        router.get('authorize', [controllers.Oauth, 'showAuthorization'])
+        router.post('authorize/approve', [controllers.Oauth, 'approveAuthorization'])
+        router.post('authorize/deny', [controllers.Oauth, 'denyAuthorization'])
+      })
+      .use(middleware.webAuth())
   })
   .prefix('oauth')

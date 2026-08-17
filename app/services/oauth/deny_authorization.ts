@@ -66,11 +66,11 @@ export default class OauthDenyAuthorizationService {
   }
 
   private redirectWithAccessDenied(payload: DenyAuthorizationPayload) {
-    return this.ctx.response.ok({
-      redirect_to: this.buildRedirectUrl(payload.redirect_uri, {
+    return this.ctx.response.redirect(
+      this.buildRedirectUrl(payload.redirect_uri, {
         error: 'access_denied',
         state: payload.state,
-      }),
-    })
+      })
+    )
   }
 }

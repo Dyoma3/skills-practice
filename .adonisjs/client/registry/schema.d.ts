@@ -103,6 +103,18 @@ export interface Registry {
       errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#controllers/oauth_controller').default['token']>>>
     }
   }
+  'oauth.show_authorization': {
+    methods: ["GET","HEAD"]
+    pattern: '/oauth/authorize'
+    types: {
+      body: {}
+      paramsTuple: []
+      params: {}
+      query: {}
+      response: ExtractResponse<Awaited<ReturnType<import('#controllers/oauth_controller').default['showAuthorization']>>>
+      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#controllers/oauth_controller').default['showAuthorization']>>>
+    }
+  }
   'oauth.approve_authorization': {
     methods: ["POST"]
     pattern: '/oauth/authorize/approve'

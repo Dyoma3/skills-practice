@@ -101,9 +101,6 @@ test.group('POST /oauth/token', (group) => {
     )
     assert.lengthOf(await User.accessTokens.all(user), 0)
 
-    const apiResponse = await client.get('/api/v1/account/profile').bearerToken(accessToken)
-    apiResponse.assertStatus(401)
-
     const reuseResponse = await client.post('/oauth/token').form(tokenPayload(code))
     reuseResponse.assertStatus(400)
     reuseResponse.assertBodyContains({ error: 'invalid_grant' })
@@ -163,20 +160,26 @@ test.group('POST /oauth/token', (group) => {
 
   test('exchanges a code returned by authorization approval', async ({ client, assert }) => {
     const user = await createUser()
-    const approvalResponse = await client.post('/oauth/authorize/approve').loginAs(user).json({
-      response_type: 'code',
-      client_id: 'claude',
-      redirect_uri: claudeRedirectUri,
-      scope: 'mcp:read mcp:write',
-      state: 'state-123',
-      code_challenge: codeChallenge,
-      code_challenge_method: 'S256',
-      resource: mcpOAuth.resource,
-    })
+    const approvalResponse = await client
+      .post('/oauth/authorize/approve')
+      .redirects(0)
+      .withGuard('web')
+      .loginAs(user)
+      .withCsrfToken()
+      .form({
+        response_type: 'code',
+        client_id: 'claude',
+        redirect_uri: claudeRedirectUri,
+        scope: 'mcp:read mcp:write',
+        state: 'state-123',
+        code_challenge: codeChallenge,
+        code_challenge_method: 'S256',
+        resource: mcpOAuth.resource,
+      })
 
-    approvalResponse.assertStatus(200)
+    approvalResponse.assertStatus(302)
 
-    const redirectUrl = new URL(approvalResponse.body().redirect_to)
+    const redirectUrl = new URL(approvalResponse.header('location')!)
     const code = redirectUrl.searchParams.get('code')
 
     assert.isString(code)

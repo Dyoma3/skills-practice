@@ -23,26 +23,34 @@ function authorizationPayload(overrides: Record<string, unknown> = {}) {
   }
 }
 
-function getRedirectUrl(redirectTo: string | undefined) {
-  if (!redirectTo) throw new Error('Expected redirect_to response field')
-  return new URL(redirectTo)
+function getRedirectUrl(location: string | undefined) {
+  if (!location) throw new Error('Expected Location response header')
+  return new URL(location)
 }
 
 test.group('POST /oauth/authorize/approve', (group) => {
   group.each.setup(() => testUtils.db().wrapInGlobalTransaction())
 
   test('requires authentication', async ({ client }) => {
-    const response = await client.post('/oauth/authorize/approve').json(authorizationPayload())
+    const response = await client
+      .post('/oauth/authorize/approve')
+      .redirects(0)
+      .withCsrfToken()
+      .form(authorizationPayload())
 
-    response.assertStatus(401)
+    response.assertStatus(302)
+    response.assertHeader('location', '/login')
   })
 
   test('rejects clients outside the static allowlist', async ({ client }) => {
     const user = await createUser()
     const response = await client
       .post('/oauth/authorize/approve')
+      .redirects(0)
+      .withGuard('web')
       .loginAs(user)
-      .json(authorizationPayload({ client_id: 'unknown-client' }))
+      .withCsrfToken()
+      .form(authorizationPayload({ client_id: 'unknown-client' }))
 
     response.assertStatus(400)
     response.assertBodyContains({ error: 'invalid_client' })
@@ -52,8 +60,11 @@ test.group('POST /oauth/authorize/approve', (group) => {
     const user = await createUser()
     const response = await client
       .post('/oauth/authorize/approve')
+      .redirects(0)
+      .withGuard('web')
       .loginAs(user)
-      .json(authorizationPayload({ resource: 'https://api.example.com/other-resource' }))
+      .withCsrfToken()
+      .form(authorizationPayload({ resource: 'https://api.example.com/other-resource' }))
 
     response.assertStatus(400)
     response.assertBodyContains({
@@ -66,8 +77,11 @@ test.group('POST /oauth/authorize/approve', (group) => {
     const user = await createUser()
     const response = await client
       .post('/oauth/authorize/approve')
+      .redirects(0)
+      .withGuard('web')
       .loginAs(user)
-      .json(authorizationPayload({ redirect_uri: 'https://attacker.example/oauth/callback' }))
+      .withCsrfToken()
+      .form(authorizationPayload({ redirect_uri: 'https://attacker.example/oauth/callback' }))
 
     response.assertStatus(400)
     response.assertBodyContains({
@@ -83,8 +97,11 @@ test.group('POST /oauth/authorize/approve', (group) => {
     const user = await createUser()
     const response = await client
       .post('/oauth/authorize/approve')
+      .redirects(0)
+      .withGuard('web')
       .loginAs(user)
-      .json(authorizationPayload({ code_challenge: 'too-short' }))
+      .withCsrfToken()
+      .form(authorizationPayload({ code_challenge: 'too-short' }))
 
     response.assertStatus(422)
     assert.isNull(await OAuthAuthorizationCode.query().where('userId', user.id).first())
@@ -97,12 +114,15 @@ test.group('POST /oauth/authorize/approve', (group) => {
     const user = await createUser()
     const response = await client
       .post('/oauth/authorize/approve')
+      .redirects(0)
+      .withGuard('web')
       .loginAs(user)
-      .json(authorizationPayload())
+      .withCsrfToken()
+      .form(authorizationPayload())
 
-    response.assertStatus(200)
+    response.assertStatus(302)
 
-    const redirectUrl = getRedirectUrl(response.body().redirect_to)
+    const redirectUrl = getRedirectUrl(response.header('location'))
     const code = redirectUrl.searchParams.get('code')
 
     assert.equal(redirectUrl.origin + redirectUrl.pathname, claudeRedirectUri)
@@ -129,12 +149,15 @@ test.group('POST /oauth/authorize/approve', (group) => {
     const redirectUri = 'http://127.0.0.1:59137/callback/--52FXdsbEbv'
     const response = await client
       .post('/oauth/authorize/approve')
+      .redirects(0)
+      .withGuard('web')
       .loginAs(user)
-      .json(authorizationPayload({ client_id: 'codex', redirect_uri: redirectUri }))
+      .withCsrfToken()
+      .form(authorizationPayload({ client_id: 'codex', redirect_uri: redirectUri }))
 
-    response.assertStatus(200)
+    response.assertStatus(302)
 
-    const redirectUrl = getRedirectUrl(response.body().redirect_to)
+    const redirectUrl = getRedirectUrl(response.header('location'))
 
     assert.equal(redirectUrl.origin + redirectUrl.pathname, redirectUri)
     assert.isString(redirectUrl.searchParams.get('code'))
@@ -148,12 +171,15 @@ test.group('POST /oauth/authorize/approve', (group) => {
     const redirectUri = 'https://chatgpt.com/connector/oauth/Caw9Tvne-u1F'
     const response = await client
       .post('/oauth/authorize/approve')
+      .redirects(0)
+      .withGuard('web')
       .loginAs(user)
-      .json(authorizationPayload({ client_id: 'chatgpt', redirect_uri: redirectUri }))
+      .withCsrfToken()
+      .form(authorizationPayload({ client_id: 'chatgpt', redirect_uri: redirectUri }))
 
-    response.assertStatus(200)
+    response.assertStatus(302)
 
-    const redirectUrl = getRedirectUrl(response.body().redirect_to)
+    const redirectUrl = getRedirectUrl(response.header('location'))
 
     assert.equal(redirectUrl.origin + redirectUrl.pathname, redirectUri)
     assert.isString(redirectUrl.searchParams.get('code'))
@@ -166,12 +192,15 @@ test.group('POST /oauth/authorize/approve', (group) => {
     const user = await createUser()
     const response = await client
       .post('/oauth/authorize/approve')
+      .redirects(0)
+      .withGuard('web')
       .loginAs(user)
-      .json(authorizationPayload({ scope: 'mcp:admin' }))
+      .withCsrfToken()
+      .form(authorizationPayload({ scope: 'mcp:admin' }))
 
-    response.assertStatus(200)
+    response.assertStatus(302)
 
-    const redirectUrl = getRedirectUrl(response.body().redirect_to)
+    const redirectUrl = getRedirectUrl(response.header('location'))
 
     assert.equal(redirectUrl.searchParams.get('error'), 'invalid_scope')
     assert.equal(redirectUrl.searchParams.get('state'), 'state-123')
@@ -183,9 +212,15 @@ test.group('POST /oauth/authorize/approve', (group) => {
     const user = await createUser()
     const payload = { ...authorizationPayload(), scope: undefined }
 
-    const response = await client.post('/oauth/authorize/approve').loginAs(user).json(payload)
+    const response = await client
+      .post('/oauth/authorize/approve')
+      .redirects(0)
+      .withGuard('web')
+      .loginAs(user)
+      .withCsrfToken()
+      .form(payload)
 
-    response.assertStatus(200)
+    response.assertStatus(302)
 
     const authorizationCode = await OAuthAuthorizationCode.query().where('userId', user.id).first()
 
