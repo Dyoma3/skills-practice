@@ -8,10 +8,6 @@ export type ScannedRoutes = {
     'web.login.store': { paramsTuple?: []; params?: {} }
     'web.account': { paramsTuple?: []; params?: {} }
     'web.logout': { paramsTuple?: []; params?: {} }
-    'auth.new_account.store': { paramsTuple?: []; params?: {} }
-    'auth.access_tokens.store': { paramsTuple?: []; params?: {} }
-    'profile.profile.show': { paramsTuple?: []; params?: {} }
-    'profile.access_tokens.destroy': { paramsTuple?: []; params?: {} }
     'mcps': { paramsTuple?: []; params?: {} }
     'oauth.get_mcp_protected_resource': { paramsTuple?: []; params?: {} }
     'oauth.get_authorization_server': { paramsTuple?: []; params?: {} }
@@ -22,7 +18,6 @@ export type ScannedRoutes = {
   GET: {
     'web.login': { paramsTuple?: []; params?: {} }
     'web.account': { paramsTuple?: []; params?: {} }
-    'profile.profile.show': { paramsTuple?: []; params?: {} }
     'mcps': { paramsTuple?: []; params?: {} }
     'oauth.get_mcp_protected_resource': { paramsTuple?: []; params?: {} }
     'oauth.get_authorization_server': { paramsTuple?: []; params?: {} }
@@ -30,7 +25,6 @@ export type ScannedRoutes = {
   HEAD: {
     'web.login': { paramsTuple?: []; params?: {} }
     'web.account': { paramsTuple?: []; params?: {} }
-    'profile.profile.show': { paramsTuple?: []; params?: {} }
     'mcps': { paramsTuple?: []; params?: {} }
     'oauth.get_mcp_protected_resource': { paramsTuple?: []; params?: {} }
     'oauth.get_authorization_server': { paramsTuple?: []; params?: {} }
@@ -38,9 +32,6 @@ export type ScannedRoutes = {
   POST: {
     'web.login.store': { paramsTuple?: []; params?: {} }
     'web.logout': { paramsTuple?: []; params?: {} }
-    'auth.new_account.store': { paramsTuple?: []; params?: {} }
-    'auth.access_tokens.store': { paramsTuple?: []; params?: {} }
-    'profile.access_tokens.destroy': { paramsTuple?: []; params?: {} }
     'mcps': { paramsTuple?: []; params?: {} }
     'oauth.token': { paramsTuple?: []; params?: {} }
     'oauth.approve_authorization': { paramsTuple?: []; params?: {} }

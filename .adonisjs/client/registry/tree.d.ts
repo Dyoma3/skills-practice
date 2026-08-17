@@ -9,22 +9,6 @@ export interface ApiDefinition {
     account: typeof routes['web.account']
     logout: typeof routes['web.logout']
   }
-  auth: {
-    newAccount: {
-      store: typeof routes['auth.new_account.store']
-    }
-    accessTokens: {
-      store: typeof routes['auth.access_tokens.store']
-    }
-  }
-  profile: {
-    profile: {
-      show: typeof routes['profile.profile.show']
-    }
-    accessTokens: {
-      destroy: typeof routes['profile.access_tokens.destroy']
-    }
-  }
   mcps: typeof routes['mcps']
   oauth: {
     getMcpProtectedResource: typeof routes['oauth.get_mcp_protected_resource']
