@@ -82,6 +82,19 @@ export class OauthAuthorizationCodeSchema extends BaseModel {
   declare userId: number
 }
 
+export class SkillSchema extends BaseModel {
+  static $columns = ['description', 'id', 'name', 'parentId'] as const
+  $columns = SkillSchema.$columns
+  @column()
+  declare description: string
+  @column({ isPrimary: true })
+  declare id: string
+  @column()
+  declare name: string
+  @column()
+  declare parentId: string | null
+}
+
 export class UserSchema extends BaseModel {
   static $columns = [
     'createdAt',
