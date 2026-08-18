@@ -7,6 +7,23 @@
 import { BaseModel, column } from '@adonisjs/lucid/orm'
 import { DateTime } from 'luxon'
 
+export class AttemptSchema extends BaseModel {
+  static $columns = ['createdAt', 'feedback', 'id', 'questionId', 'response', 'score'] as const
+  $columns = AttemptSchema.$columns
+  @column.dateTime({ autoCreate: true })
+  declare createdAt: DateTime
+  @column()
+  declare feedback: string | null
+  @column({ isPrimary: true })
+  declare id: string
+  @column()
+  declare questionId: string
+  @column()
+  declare response: string
+  @column()
+  declare score: number
+}
+
 export class AuthAccessTokenSchema extends BaseModel {
   static $columns = [
     'abilities',
@@ -80,6 +97,50 @@ export class OauthAuthorizationCodeSchema extends BaseModel {
   declare scopes: any
   @column()
   declare userId: number
+}
+
+export class QuestionSchema extends BaseModel {
+  static $columns = [
+    'answer',
+    'context',
+    'createdAt',
+    'id',
+    'prompt',
+    'rubricId',
+    'skillId',
+  ] as const
+  $columns = QuestionSchema.$columns
+  @column()
+  declare answer: string | null
+  @column()
+  declare context: string | null
+  @column.dateTime({ autoCreate: true })
+  declare createdAt: DateTime
+  @column({ isPrimary: true })
+  declare id: string
+  @column()
+  declare prompt: string
+  @column()
+  declare rubricId: string
+  @column()
+  declare skillId: string
+}
+
+export class RubricSchema extends BaseModel {
+  static $columns = ['data', 'description', 'id', 'maxScore', 'name', 'type'] as const
+  $columns = RubricSchema.$columns
+  @column()
+  declare data: any
+  @column()
+  declare description: string
+  @column({ isPrimary: true })
+  declare id: string
+  @column()
+  declare maxScore: number
+  @column()
+  declare name: string
+  @column()
+  declare type: string
 }
 
 export class SkillSchema extends BaseModel {

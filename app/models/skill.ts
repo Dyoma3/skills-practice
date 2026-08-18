@@ -1,6 +1,7 @@
 import { SkillSchema } from '#database/schema'
 import { belongsTo, hasMany } from '@adonisjs/lucid/orm'
 import type { BelongsTo, HasMany } from '@adonisjs/lucid/types/relations'
+import Question from '#models/question'
 
 export default class Skill extends SkillSchema {
   @belongsTo(() => Skill, { foreignKey: 'parentId' })
@@ -8,4 +9,7 @@ export default class Skill extends SkillSchema {
 
   @hasMany(() => Skill, { foreignKey: 'parentId' })
   declare children: HasMany<typeof Skill>
+
+  @hasMany(() => Question)
+  declare questions: HasMany<typeof Question>
 }

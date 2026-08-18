@@ -5,9 +5,12 @@
 
 export const controllers = {
   AccessTokens: () => import('#controllers/access_tokens_controller'),
+  Attempts: () => import('#controllers/attempts_controller'),
   Mcps: () => import('#controllers/mcps_controller'),
   NewAccount: () => import('#controllers/new_account_controller'),
   Oauth: () => import('#controllers/oauth_controller'),
   Profile: () => import('#controllers/profile_controller'),
+  Questions: () => import('#controllers/questions_controller'),
+  Rubrics: () => import('#controllers/rubrics_controller'),
   WebSessions: () => import('#controllers/web_sessions_controller'),
 }
