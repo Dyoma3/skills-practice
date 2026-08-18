@@ -1,0 +1,4 @@
+interface:
+  display_name: "Adonis v7 Backend"
+  short_description: "Build and maintain AdonisJS v7 backends"
+  default_prompt: "Use $adonis-v7-backend to implement this AdonisJS v7 backend task."
