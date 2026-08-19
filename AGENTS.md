@@ -2,29 +2,31 @@
 
 This repository is the AdonisJS v7 backend and MCP server for Skills Practice.
 
-## Shared Backend Skill
+## Required Agent Context
 
-For all work in this AdonisJS backend, read and follow the local Codex skill at
+Before working in this repository, read and follow the local Codex skill at
 [`.agents/skills/adonis-v7-backend/SKILL.md`](.agents/skills/adonis-v7-backend/SKILL.md) for generic
 backend conventions, architecture guidance, testing expectations, and code review criteria.
 
-Treat this skill as part of the repository context. Read the skill's referenced files under
+Treat the skill as mandatory repository context. Read its referenced files under
 `.agents/skills/adonis-v7-backend/references/` as directed by the skill and as relevant to the task.
+
+Also read [`.context/project.md`](.context/project.md) before making product, domain, persistence,
+authentication, HTTP, or MCP changes. It is the shared, agent-optimized project context distilled
+from [`README.md`](README.md) and the current architecture.
 
 This repository exposes an MCP server through Adonis HTTP, so apply the skill's MCP guidance. It
 does not use Redis, BullMQ, or `@adonisjs/queue`; skip the queue sections unless the repository
 gains one of those dependencies.
 
-## Skills Practice Context
+## Context Priority
 
-- Read [`README.md`](README.md) for the product model, domain invariants, and current non-goals.
-- Preserve the immutable-attempt, stable-rubric, leaf-question, and acyclic-skill-tree invariants.
-- Keep OAuth-protected MCP behavior consistent with the HTTP authentication and ownership model.
-- Use Zod and `lib/request_validator.ts` for application input contracts. Preserve Vine where the
-  Adonis framework bootstrap or an existing feature already requires it.
-- Keep generated controllers, route registries, Lucid schemas, transformers, and API serialization
-  aligned with the hooks and provider configured in this repository.
-- Never hand-edit generated files under `.adonisjs/` or `database/schema.ts`.
+- Preserve `.context/project.md` and `README.md` as product intent; do not infer that an unimplemented
+  invariant is optional.
+- Follow nearby code, tests, and repository configuration for current framework mechanics.
+- Prefer this repository's context over generic skill examples when they differ.
+- Surface material conflicts between product intent and implementation instead of silently choosing
+  one.
 
 ## Quality Bar
 
