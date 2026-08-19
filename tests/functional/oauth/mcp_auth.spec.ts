@@ -5,7 +5,7 @@ import db from '@adonisjs/lucid/services/db'
 import User from '#models/user'
 import { mcpOAuth } from '#lib/oauth/mcp'
 import { middleware } from '#start/kernel'
-import { createUser } from '#tests/helpers/user'
+import { UserFactory } from '#database/factories/user_factory'
 
 const testRoute = '/__tests/mcp-auth'
 const challenge = `Bearer resource_metadata="${mcpOAuth.protectedResourceMetadataUrl}"`
@@ -30,7 +30,7 @@ test.group('MCP authentication middleware', (group) => {
     client,
     assert,
   }) => {
-    const user = await createUser()
+    const user = await UserFactory.create()
     const response = await client.get(testRoute).loginAs(user)
 
     response.assertStatus(401)
@@ -39,7 +39,7 @@ test.group('MCP authentication middleware', (group) => {
   })
 
   test('authenticates MCP access tokens through the MCP guard', async ({ client }) => {
-    const user = await createUser()
+    const user = await UserFactory.create()
     const accessToken = await User.mcpAccessTokens.create(user, ['mcp:read'])
     const response = await client.get(testRoute).bearerToken(accessToken.value!.release())
 
@@ -51,7 +51,7 @@ test.group('MCP authentication middleware', (group) => {
     client,
     assert,
   }) => {
-    const user = await createUser()
+    const user = await UserFactory.create()
     const accessToken = await User.mcpAccessTokens.create(user, ['mcp:read'])
 
     await db

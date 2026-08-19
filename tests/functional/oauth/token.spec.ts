@@ -6,7 +6,7 @@ import User from '#models/user'
 import { mcpOAuth } from '#lib/oauth/mcp'
 import { oauthServer } from '#lib/oauth/server'
 import { AuthTokenTypes } from '#types/index'
-import { createUser } from '#tests/helpers/user'
+import { UserFactory } from '#database/factories/user_factory'
 
 const codeVerifier = 'a'.repeat(43)
 const codeChallenge = createHash('sha256').update(codeVerifier).digest('base64url')
@@ -68,7 +68,7 @@ test.group('POST /oauth/token', (group) => {
     client,
     assert,
   }) => {
-    const user = await createUser()
+    const user = await UserFactory.create()
     const { code, authorizationCode } = await issueAuthorizationCode(user.id, {
       scopes: ['mcp:read', 'mcp:write'],
     })
@@ -110,7 +110,7 @@ test.group('POST /oauth/token', (group) => {
     client,
     assert,
   }) => {
-    const user = await createUser()
+    const user = await UserFactory.create()
     const { code, authorizationCode } = await issueAuthorizationCode(user.id)
     const response = await client
       .post('/oauth/token')
@@ -123,7 +123,7 @@ test.group('POST /oauth/token', (group) => {
   })
 
   test('rejects malformed PKCE verifiers before consuming the code', async ({ client, assert }) => {
-    const user = await createUser()
+    const user = await UserFactory.create()
     const { code, authorizationCode } = await issueAuthorizationCode(user.id)
     const response = await client
       .post('/oauth/token')
@@ -136,7 +136,7 @@ test.group('POST /oauth/token', (group) => {
   })
 
   test('rejects redirect URI and resource mismatches', async ({ client }) => {
-    const user = await createUser()
+    const user = await UserFactory.create()
     const redirectCode = await issueAuthorizationCode(user.id)
     const redirectResponse = await client.post('/oauth/token').form(
       tokenPayload(redirectCode.code, {
@@ -159,7 +159,7 @@ test.group('POST /oauth/token', (group) => {
   })
 
   test('exchanges a code returned by authorization approval', async ({ client, assert }) => {
-    const user = await createUser()
+    const user = await UserFactory.create()
     const approvalResponse = await client
       .post('/oauth/authorize/approve')
       .redirects(0)

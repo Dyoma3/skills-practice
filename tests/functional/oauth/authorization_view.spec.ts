@@ -2,7 +2,7 @@ import { createHash } from 'node:crypto'
 import { test } from '@japa/runner'
 import testUtils from '@adonisjs/core/services/test_utils'
 import { mcpOAuth } from '#lib/oauth/mcp'
-import { createUser } from '#tests/helpers/user'
+import { UserFactory } from '#database/factories/user_factory'
 
 const codeChallenge = createHash('sha256').update('a'.repeat(43)).digest('base64url')
 
@@ -36,7 +36,7 @@ test.group('GET /oauth/authorize', (group) => {
   })
 
   test('renders the consent request for a web session', async ({ client }) => {
-    const user = await createUser()
+    const user = await UserFactory.create()
     const response = await client
       .get('/oauth/authorize')
       .withGuard('web')
@@ -57,7 +57,7 @@ test.group('GET /oauth/authorize', (group) => {
   })
 
   test('uses the client scopes when the request omits scope', async ({ client }) => {
-    const user = await createUser()
+    const user = await UserFactory.create()
     const query = Object.fromEntries(
       Object.entries(authorizationQuery()).filter(([name]) => name !== 'scope')
     )
@@ -69,7 +69,7 @@ test.group('GET /oauth/authorize', (group) => {
   })
 
   test('does not render decision forms for an invalid request', async ({ client, assert }) => {
-    const user = await createUser()
+    const user = await UserFactory.create()
     const response = await client
       .get('/oauth/authorize')
       .withGuard('web')
@@ -83,7 +83,7 @@ test.group('GET /oauth/authorize', (group) => {
   })
 
   test('does not render decision forms for an unknown client', async ({ client, assert }) => {
-    const user = await createUser()
+    const user = await UserFactory.create()
     const response = await client
       .get('/oauth/authorize')
       .withGuard('web')

@@ -4,7 +4,7 @@ import testUtils from '@adonisjs/core/services/test_utils'
 import OAuthAuthorizationCode from '#models/oauth_authorization_code'
 import { mcpOAuth } from '#lib/oauth/mcp'
 import { oauthServer } from '#lib/oauth/server'
-import { createUser } from '#tests/helpers/user'
+import { UserFactory } from '#database/factories/user_factory'
 
 const codeChallenge = 'challenge'.padEnd(43, 'a')
 
@@ -12,7 +12,7 @@ test.group('OAuth authorization codes', (group) => {
   group.each.setup(() => testUtils.db().wrapInGlobalTransaction())
 
   test('issues a hashed, expiring authorization code bound to its grant', async ({ assert }) => {
-    const user = await createUser()
+    const user = await UserFactory.create()
     const { code, authorizationCode } = await OAuthAuthorizationCode.issue({
       userId: user.id,
       clientId: 'codex',
@@ -41,7 +41,7 @@ test.group('OAuth authorization codes', (group) => {
   })
 
   test('atomically consumes an authorization code only once', async ({ assert }) => {
-    const user = await createUser()
+    const user = await UserFactory.create()
     const { code, authorizationCode } = await OAuthAuthorizationCode.issue({
       userId: user.id,
       clientId: 'claude',
@@ -66,7 +66,7 @@ test.group('OAuth authorization codes', (group) => {
   })
 
   test('rejects and removes expired authorization codes', async ({ assert }) => {
-    const user = await createUser()
+    const user = await UserFactory.create()
     const { code, authorizationCode } = await OAuthAuthorizationCode.issue({
       userId: user.id,
       clientId: 'chatgpt',
@@ -85,7 +85,7 @@ test.group('OAuth authorization codes', (group) => {
   })
 
   test('deletes authorization codes when their user is deleted', async ({ assert }) => {
-    const user = await createUser()
+    const user = await UserFactory.create()
     const { authorizationCode } = await OAuthAuthorizationCode.issue({
       userId: user.id,
       clientId: 'codex',

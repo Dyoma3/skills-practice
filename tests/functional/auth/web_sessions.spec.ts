@@ -1,6 +1,6 @@
 import { test } from '@japa/runner'
 import testUtils from '@adonisjs/core/services/test_utils'
-import { createUser } from '#tests/helpers/user'
+import { UserFactory } from '#database/factories/user_factory'
 
 test.group('Web sessions', (group) => {
   group.each.setup(() => testUtils.db().wrapInGlobalTransaction())
@@ -15,7 +15,7 @@ test.group('Web sessions', (group) => {
   })
 
   test('redirects authenticated users away from login', async ({ client }) => {
-    const user = await createUser()
+    const user = await UserFactory.create()
     const response = await client.get('/login').redirects(0).withGuard('web').loginAs(user)
 
     response.assertStatus(302)
@@ -43,7 +43,7 @@ test.group('Web sessions', (group) => {
   })
 
   test('creates a web session with valid credentials', async ({ client }) => {
-    const user = await createUser()
+    const user = await UserFactory.create()
     const response = await client.post('/login').redirects(0).withCsrfToken().form({
       email: user.email,
       password: 'password123',
@@ -55,7 +55,7 @@ test.group('Web sessions', (group) => {
   })
 
   test('returns to the intended URL after login', async ({ client }) => {
-    const user = await createUser()
+    const user = await UserFactory.create()
     const response = await client
       .post('/login')
       .redirects(0)
@@ -78,7 +78,7 @@ test.group('Web sessions', (group) => {
   })
 
   test('renders the account page for a web session', async ({ client }) => {
-    const user = await createUser()
+    const user = await UserFactory.create()
     const response = await client.get('/account').withGuard('web').loginAs(user)
 
     response.assertStatus(200)
@@ -87,7 +87,7 @@ test.group('Web sessions', (group) => {
   })
 
   test('logs out a web session', async ({ client }) => {
-    const user = await createUser()
+    const user = await UserFactory.create()
     const response = await client
       .post('/logout')
       .redirects(0)

@@ -3,7 +3,7 @@ import { test } from '@japa/runner'
 import testUtils from '@adonisjs/core/services/test_utils'
 import OAuthAuthorizationCode from '#models/oauth_authorization_code'
 import { mcpOAuth } from '#lib/oauth/mcp'
-import { createUser } from '#tests/helpers/user'
+import { UserFactory } from '#database/factories/user_factory'
 
 const codeVerifier = 'a'.repeat(43)
 const codeChallenge = createHash('sha256').update(codeVerifier).digest('base64url')
@@ -43,7 +43,7 @@ test.group('POST /oauth/authorize/approve', (group) => {
   })
 
   test('rejects clients outside the static allowlist', async ({ client }) => {
-    const user = await createUser()
+    const user = await UserFactory.create()
     const response = await client
       .post('/oauth/authorize/approve')
       .redirects(0)
@@ -57,7 +57,7 @@ test.group('POST /oauth/authorize/approve', (group) => {
   })
 
   test('rejects unsupported OAuth resources', async ({ client }) => {
-    const user = await createUser()
+    const user = await UserFactory.create()
     const response = await client
       .post('/oauth/authorize/approve')
       .redirects(0)
@@ -74,7 +74,7 @@ test.group('POST /oauth/authorize/approve', (group) => {
   })
 
   test('rejects redirect URIs outside the client allowlist', async ({ client }) => {
-    const user = await createUser()
+    const user = await UserFactory.create()
     const response = await client
       .post('/oauth/authorize/approve')
       .redirects(0)
@@ -94,7 +94,7 @@ test.group('POST /oauth/authorize/approve', (group) => {
     client,
     assert,
   }) => {
-    const user = await createUser()
+    const user = await UserFactory.create()
     const response = await client
       .post('/oauth/authorize/approve')
       .redirects(0)
@@ -111,7 +111,7 @@ test.group('POST /oauth/authorize/approve', (group) => {
     client,
     assert,
   }) => {
-    const user = await createUser()
+    const user = await UserFactory.create()
     const response = await client
       .post('/oauth/authorize/approve')
       .redirects(0)
@@ -145,7 +145,7 @@ test.group('POST /oauth/authorize/approve', (group) => {
     client,
     assert,
   }) => {
-    const user = await createUser()
+    const user = await UserFactory.create()
     const redirectUri = 'http://127.0.0.1:59137/callback/--52FXdsbEbv'
     const response = await client
       .post('/oauth/authorize/approve')
@@ -167,7 +167,7 @@ test.group('POST /oauth/authorize/approve', (group) => {
     client,
     assert,
   }) => {
-    const user = await createUser()
+    const user = await UserFactory.create()
     const redirectUri = 'https://chatgpt.com/connector/oauth/Caw9Tvne-u1F'
     const response = await client
       .post('/oauth/authorize/approve')
@@ -189,7 +189,7 @@ test.group('POST /oauth/authorize/approve', (group) => {
     client,
     assert,
   }) => {
-    const user = await createUser()
+    const user = await UserFactory.create()
     const response = await client
       .post('/oauth/authorize/approve')
       .redirects(0)
@@ -209,7 +209,7 @@ test.group('POST /oauth/authorize/approve', (group) => {
   })
 
   test('uses the client defaults when scope is omitted', async ({ client, assert }) => {
-    const user = await createUser()
+    const user = await UserFactory.create()
     const payload = { ...authorizationPayload(), scope: undefined }
 
     const response = await client

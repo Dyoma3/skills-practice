@@ -1,7 +1,7 @@
 import { test } from '@japa/runner'
 import testUtils from '@adonisjs/core/services/test_utils'
 import type User from '#models/user'
-import { createUser } from '#tests/helpers/user'
+import { UserFactory } from '#database/factories/user_factory'
 import { getMcpHeaders, mcpHeaders, parseMcpEvent } from '../helpers.js'
 
 let user: User
@@ -9,7 +9,7 @@ let user: User
 test.group('POST /mcp initialize', (group) => {
   group.each.setup(async () => {
     const rollback = await testUtils.db().wrapInGlobalTransaction()
-    user = await createUser()
+    user = await UserFactory.create()
     return rollback
   })
 
@@ -53,6 +53,6 @@ test.group('POST /mcp initialize', (group) => {
         version: '0.1.0',
       },
     })
-    assert.notProperty(mcpResponse.result.capabilities, 'tools')
+    assert.property(mcpResponse.result.capabilities, 'tools')
   })
 })

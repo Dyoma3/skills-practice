@@ -2,13 +2,13 @@ import { test } from '@japa/runner'
 import testUtils from '@adonisjs/core/services/test_utils'
 import User from '#models/user'
 import { AuthTokenTypes } from '#types/index'
-import { createUser } from '#tests/helpers/user'
+import { UserFactory } from '#database/factories/user_factory'
 
 test.group('OAuth access token providers', (group) => {
   group.each.setup(() => testUtils.db().wrapInGlobalTransaction())
 
   test('stores MCP tokens separately with their granted abilities', async ({ assert }) => {
-    const user = await createUser()
+    const user = await UserFactory.create()
 
     await User.accessTokens.create(user)
     await User.mcpAccessTokens.create(user, ['mcp:read'])
@@ -23,7 +23,7 @@ test.group('OAuth access token providers', (group) => {
   })
 
   test('does not verify tokens issued by the other provider', async ({ assert }) => {
-    const user = await createUser()
+    const user = await UserFactory.create()
     const apiToken = await User.accessTokens.create(user)
     const mcpToken = await User.mcpAccessTokens.create(user, ['mcp:read', 'mcp:write'])
 

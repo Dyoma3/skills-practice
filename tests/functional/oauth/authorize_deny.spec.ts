@@ -1,7 +1,7 @@
 import { test } from '@japa/runner'
 import testUtils from '@adonisjs/core/services/test_utils'
 import { mcpOAuth } from '#lib/oauth/mcp'
-import { createUser } from '#tests/helpers/user'
+import { UserFactory } from '#database/factories/user_factory'
 
 const claudeRedirectUri = 'https://claude.ai/api/mcp/auth_callback'
 
@@ -39,7 +39,7 @@ test.group('POST /oauth/authorize/deny', (group) => {
   })
 
   test('rejects clients outside the static allowlist', async ({ client }) => {
-    const user = await createUser()
+    const user = await UserFactory.create()
     const response = await client
       .post('/oauth/authorize/deny')
       .redirects(0)
@@ -53,7 +53,7 @@ test.group('POST /oauth/authorize/deny', (group) => {
   })
 
   test('rejects redirect URIs outside the client allowlist', async ({ client }) => {
-    const user = await createUser()
+    const user = await UserFactory.create()
     const response = await client
       .post('/oauth/authorize/deny')
       .redirects(0)
@@ -70,7 +70,7 @@ test.group('POST /oauth/authorize/deny', (group) => {
   })
 
   test('returns an access_denied redirect and preserves state', async ({ client, assert }) => {
-    const user = await createUser()
+    const user = await UserFactory.create()
     const response = await client
       .post('/oauth/authorize/deny')
       .redirects(0)
