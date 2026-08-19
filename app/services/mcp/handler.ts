@@ -2,7 +2,9 @@ import { inject } from '@adonisjs/core'
 import { HttpContext } from '@adonisjs/core/http'
 import { McpServer } from '@modelcontextprotocol/sdk/server/mcp.js'
 import { StreamableHTTPServerTransport } from '@modelcontextprotocol/sdk/server/streamableHttp.js'
+import { createSkillTool } from '../../mcp/tools/create_skill.js'
 import { getSkillTool } from '../../mcp/tools/get_skill.js'
+import { searchSkillsTool } from '../../mcp/tools/search_skills.js'
 import type { McpTool } from '#mcp/types'
 
 @inject()
@@ -10,7 +12,7 @@ export default class McpHandlerService {
   private readonly tools: McpTool[]
 
   constructor(protected ctx: HttpContext) {
-    this.tools = [getSkillTool(ctx)]
+    this.tools = [createSkillTool(ctx), getSkillTool(ctx), searchSkillsTool(ctx)]
   }
 
   async execute() {

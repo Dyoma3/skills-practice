@@ -7,7 +7,17 @@ import type { AuthorizerResponse } from '@adonisjs/bouncer/types'
 
 export default class SkillPolicy extends BasePolicy {
   @validateTokenAbilities({ [AuthTokenTypes.Mcp]: ['mcp:read'] })
+  index(_user: User): AuthorizerResponse {
+    return true
+  }
+
+  @validateTokenAbilities({ [AuthTokenTypes.Mcp]: ['mcp:read'] })
   show(user: User, skill: Skill): AuthorizerResponse {
     return skill.userId === user.id
+  }
+
+  @validateTokenAbilities({ [AuthTokenTypes.Mcp]: ['mcp:write'] })
+  store(user: User, parent: Skill | null): AuthorizerResponse {
+    return parent === null || parent.userId === user.id
   }
 }
