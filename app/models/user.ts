@@ -3,6 +3,9 @@ import hash from '@adonisjs/core/services/hash'
 import { compose } from '@adonisjs/core/helpers'
 import { withAuthFinder } from '@adonisjs/auth/mixins/lucid'
 import { type AccessToken, DbAccessTokensProvider } from '@adonisjs/auth/access_tokens'
+import { hasMany } from '@adonisjs/lucid/orm'
+import type { HasMany } from '@adonisjs/lucid/types/relations'
+import Skill from '#models/skill'
 import { AuthTokenTypes } from '#types/index'
 
 export default class User extends compose(
@@ -14,6 +17,9 @@ export default class User extends compose(
     type: AuthTokenTypes.Mcp,
   })
   declare currentAccessToken?: AccessToken
+
+  @hasMany(() => Skill)
+  declare skills: HasMany<typeof Skill>
 
   get initials() {
     if (this.firstName && this.lastName) {

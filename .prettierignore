@@ -1,3 +1,5 @@
 .adonisjs
 node_modules
 build
+.agents/skills/adonis-v7-backend/
+.claude/skills/adonis-v7-backend/

@@ -8,6 +8,7 @@ export default class extends BaseSchema {
   async up() {
     this.schema.createTable(this.tableName, (table) => {
       table.uuid('id').primary().defaultTo(this.raw('gen_random_uuid()'))
+      table.integer('user_id').notNullable().references('id').inTable('users').onDelete('CASCADE')
       table
         .uuid('parent_id')
         .nullable()
@@ -17,12 +18,12 @@ export default class extends BaseSchema {
       table.text('name').notNullable()
       table.text('description').notNullable()
 
-      table.index(['parent_id'])
+      table.index(['user_id', 'parent_id'])
     })
 
     this.schema.raw(
-      `CREATE UNIQUE INDEX skills_parent_id_name_unique
-       ON ${this.tableName} (COALESCE(parent_id, '${ROOT_SKILL_ID}'::uuid), name)`
+      `CREATE UNIQUE INDEX skills_user_id_parent_id_name_unique
+       ON ${this.tableName} (user_id, COALESCE(parent_id, '${ROOT_SKILL_ID}'::uuid), name)`
     )
   }
 

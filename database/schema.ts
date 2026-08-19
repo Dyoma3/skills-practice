@@ -144,7 +144,7 @@ export class RubricSchema extends BaseModel {
 }
 
 export class SkillSchema extends BaseModel {
-  static $columns = ['description', 'id', 'name', 'parentId'] as const
+  static $columns = ['description', 'id', 'name', 'parentId', 'userId'] as const
   $columns = SkillSchema.$columns
   @column()
   declare description: string
@@ -154,6 +154,8 @@ export class SkillSchema extends BaseModel {
   declare name: string
   @column()
   declare parentId: string | null
+  @column()
+  declare userId: number
 }
 
 export class UserSchema extends BaseModel {
