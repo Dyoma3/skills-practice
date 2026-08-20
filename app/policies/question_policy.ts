@@ -30,4 +30,11 @@ export default class QuestionPolicy extends BasePolicy {
       await question.related('skill').query().where('userId', user.id).select('id').first()
     )
   }
+
+  @validateTokenAbilities({ [AuthTokenTypes.Mcp]: ['mcp:write'] })
+  async update(user: User, question: Question): Promise<AuthorizerResponse> {
+    return Boolean(
+      await question.related('skill').query().where('userId', user.id).select('id').first()
+    )
+  }
 }

@@ -26,3 +26,16 @@ export const showValidator = z.object({
 export const deleteValidator = z.object({
   rubricId: z.uuid(),
 })
+
+export const updateValidator = z
+  .object({
+    rubricId: z.uuid(),
+    type: z.enum(RubricTypes).optional(),
+    name: z.string().trim().min(1).optional(),
+    description: z.string().trim().min(1).optional(),
+  })
+  .refine(
+    ({ type, name, description }) =>
+      type !== undefined || name !== undefined || description !== undefined,
+    'At least one field must be provided'
+  )

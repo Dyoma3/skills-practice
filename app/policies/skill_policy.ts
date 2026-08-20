@@ -25,4 +25,9 @@ export default class SkillPolicy extends BasePolicy {
   delete(user: User, skill: Skill): AuthorizerResponse {
     return skill.userId === user.id
   }
+
+  @validateTokenAbilities({ [AuthTokenTypes.Mcp]: ['mcp:write'] })
+  update(user: User, skill: Skill): AuthorizerResponse {
+    return skill.userId === user.id
+  }
 }

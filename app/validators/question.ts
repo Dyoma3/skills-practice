@@ -22,3 +22,16 @@ export const showValidator = z.object({
 export const deleteValidator = z.object({
   questionId: z.uuid(),
 })
+
+export const updateValidator = z
+  .object({
+    questionId: z.uuid(),
+    prompt: z.string().trim().min(1).optional(),
+    context: z.string().trim().min(1).nullable().optional(),
+    answer: z.string().trim().min(1).nullable().optional(),
+  })
+  .refine(
+    ({ prompt, context, answer }) =>
+      prompt !== undefined || context !== undefined || answer !== undefined,
+    'At least one field must be provided'
+  )

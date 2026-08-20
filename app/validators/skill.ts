@@ -1,7 +1,7 @@
 import { z } from 'zod'
 
 export const storeValidator = z.object({
-  parentId: z.string().uuid().nullable().optional(),
+  parentId: z.uuid().nullable().optional(),
   name: z.string().trim().min(1),
   description: z.string().trim().min(1),
 })
@@ -13,10 +13,21 @@ export const searchValidator = z.object({
 })
 
 export const showValidator = z.object({
-  skillId: z.string().uuid(),
+  skillId: z.uuid(),
   includeChildren: z.boolean().optional(),
 })
 
 export const deleteValidator = z.object({
-  skillId: z.string().uuid(),
+  skillId: z.uuid(),
 })
+
+export const updateValidator = z
+  .object({
+    skillId: z.uuid(),
+    name: z.string().trim().min(1).optional(),
+    description: z.string().trim().min(1).optional(),
+  })
+  .refine(
+    ({ name, description }) => name !== undefined || description !== undefined,
+    'At least one field must be provided'
+  )

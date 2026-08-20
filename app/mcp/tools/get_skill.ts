@@ -15,7 +15,7 @@ export function getSkillTool(ctx: HttpContext): McpTool {
 const skillSchema = {
   id: z.uuid(),
   userId: z.number(),
-  parentId: z.string().uuid().nullable(),
+  parentId: z.uuid().nullable(),
   name: z.string(),
   description: z.string(),
 }

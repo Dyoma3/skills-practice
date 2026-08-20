@@ -25,4 +25,9 @@ export default class RubricPolicy extends BasePolicy {
   delete(_user: User, _rubric: Rubric): AuthorizerResponse {
     return true
   }
+
+  @validateTokenAbilities({ [AuthTokenTypes.Mcp]: ['mcp:write'] })
+  update(_user: User, _rubric: Rubric): AuthorizerResponse {
+    return true
+  }
 }

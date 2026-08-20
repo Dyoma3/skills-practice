@@ -17,6 +17,9 @@ import { searchAttemptsTool } from '../../mcp/tools/search_attempts.js'
 import { searchQuestionsTool } from '../../mcp/tools/search_questions.js'
 import { searchRubricsTool } from '../../mcp/tools/search_rubrics.js'
 import { searchSkillsTool } from '../../mcp/tools/search_skills.js'
+import { updateQuestionTool } from '../../mcp/tools/update_question.js'
+import { updateRubricTool } from '../../mcp/tools/update_rubric.js'
+import { updateSkillTool } from '../../mcp/tools/update_skill.js'
 import type { McpTool } from '#mcp/types'
 
 @inject()
@@ -40,6 +43,9 @@ export default class McpHandlerService {
       searchQuestionsTool(ctx),
       searchRubricsTool(ctx),
       searchSkillsTool(ctx),
+      updateQuestionTool(ctx),
+      updateRubricTool(ctx),
+      updateSkillTool(ctx),
     ]
   }
 
