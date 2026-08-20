@@ -6,6 +6,9 @@ import { createAttemptTool } from '../../mcp/tools/create_attempt.js'
 import { createQuestionTool } from '../../mcp/tools/create_question.js'
 import { createRubricTool } from '../../mcp/tools/create_rubric.js'
 import { createSkillTool } from '../../mcp/tools/create_skill.js'
+import { deleteQuestionTool } from '../../mcp/tools/delete_question.js'
+import { deleteRubricTool } from '../../mcp/tools/delete_rubric.js'
+import { deleteSkillTool } from '../../mcp/tools/delete_skill.js'
 import { getAttemptTool } from '../../mcp/tools/get_attempt.js'
 import { getQuestionTool } from '../../mcp/tools/get_question.js'
 import { getRubricTool } from '../../mcp/tools/get_rubric.js'
@@ -26,6 +29,9 @@ export default class McpHandlerService {
       createQuestionTool(ctx),
       createRubricTool(ctx),
       createSkillTool(ctx),
+      deleteQuestionTool(ctx),
+      deleteRubricTool(ctx),
+      deleteSkillTool(ctx),
       getAttemptTool(ctx),
       getQuestionTool(ctx),
       getRubricTool(ctx),

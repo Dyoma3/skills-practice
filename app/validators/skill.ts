@@ -16,3 +16,7 @@ export const showValidator = z.object({
   skillId: z.string().uuid(),
   includeChildren: z.boolean().optional(),
 })
+
+export const deleteValidator = z.object({
+  skillId: z.string().uuid(),
+})

@@ -18,3 +18,7 @@ export const searchValidator = z.object({
 export const showValidator = z.object({
   questionId: z.uuid(),
 })
+
+export const deleteValidator = z.object({
+  questionId: z.uuid(),
+})

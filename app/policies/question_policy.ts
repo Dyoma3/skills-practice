@@ -23,4 +23,11 @@ export default class QuestionPolicy extends BasePolicy {
   store(user: User, skill: Skill): AuthorizerResponse {
     return skill.userId === user.id
   }
+
+  @validateTokenAbilities({ [AuthTokenTypes.Mcp]: ['mcp:write'] })
+  async delete(user: User, question: Question): Promise<AuthorizerResponse> {
+    return Boolean(
+      await question.related('skill').query().where('userId', user.id).select('id').first()
+    )
+  }
 }

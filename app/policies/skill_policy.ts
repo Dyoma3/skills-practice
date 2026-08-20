@@ -20,4 +20,9 @@ export default class SkillPolicy extends BasePolicy {
   store(user: User, parent: Skill | null): AuthorizerResponse {
     return parent === null || parent.userId === user.id
   }
+
+  @validateTokenAbilities({ [AuthTokenTypes.Mcp]: ['mcp:write'] })
+  delete(user: User, skill: Skill): AuthorizerResponse {
+    return skill.userId === user.id
+  }
 }

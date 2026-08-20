@@ -22,3 +22,7 @@ export const searchValidator = z.object({
 export const showValidator = z.object({
   rubricId: z.uuid(),
 })
+
+export const deleteValidator = z.object({
+  rubricId: z.uuid(),
+})
