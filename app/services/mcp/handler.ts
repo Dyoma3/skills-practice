@@ -2,10 +2,13 @@ import { inject } from '@adonisjs/core'
 import { HttpContext } from '@adonisjs/core/http'
 import { McpServer } from '@modelcontextprotocol/sdk/server/mcp.js'
 import { StreamableHTTPServerTransport } from '@modelcontextprotocol/sdk/server/streamableHttp.js'
+import { createQuestionTool } from '../../mcp/tools/create_question.js'
 import { createRubricTool } from '../../mcp/tools/create_rubric.js'
 import { createSkillTool } from '../../mcp/tools/create_skill.js'
+import { getQuestionTool } from '../../mcp/tools/get_question.js'
 import { getRubricTool } from '../../mcp/tools/get_rubric.js'
 import { getSkillTool } from '../../mcp/tools/get_skill.js'
+import { searchQuestionsTool } from '../../mcp/tools/search_questions.js'
 import { searchRubricsTool } from '../../mcp/tools/search_rubrics.js'
 import { searchSkillsTool } from '../../mcp/tools/search_skills.js'
 import type { McpTool } from '#mcp/types'
@@ -16,10 +19,13 @@ export default class McpHandlerService {
 
   constructor(protected ctx: HttpContext) {
     this.tools = [
+      createQuestionTool(ctx),
       createRubricTool(ctx),
       createSkillTool(ctx),
+      getQuestionTool(ctx),
       getRubricTool(ctx),
       getSkillTool(ctx),
+      searchQuestionsTool(ctx),
       searchRubricsTool(ctx),
       searchSkillsTool(ctx),
     ]
