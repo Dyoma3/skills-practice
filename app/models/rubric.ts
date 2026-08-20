@@ -11,10 +11,12 @@ export default class Rubric extends RubricSchema {
   declare data: RubricData
 
   @beforeSave()
-  static async validateData(rubric: Rubric) {
-    if (!rubric.$isLocal && !rubric.$dirty.data) return
+  static async validateDataAndDeriveMaxScore(rubric: Rubric) {
+    if (rubric.$isLocal || rubric.$dirty.data) {
+      rubric.data = await rubricDataValidator.validate(rubric.data)
+    }
 
-    rubric.data = await rubricDataValidator.validate(rubric.data)
+    rubric.maxScore = Object.values(rubric.data).reduce((total, points) => total + points, 0)
   }
 
   @hasMany(() => Question)
