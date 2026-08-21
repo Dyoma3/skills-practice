@@ -1,5 +1,6 @@
 import { test } from '@japa/runner'
 import testUtils from '@adonisjs/core/services/test_utils'
+import { mcpServerInstructions } from '#mcp/server_instructions'
 import type User from '#models/user'
 import { UserFactory } from '#database/factories/user_factory'
 import { getMcpHeaders, mcpHeaders, parseMcpEvent } from '../helpers.js'
@@ -52,6 +53,7 @@ test.group('POST /mcp initialize', (group) => {
         name: 'skills-practice',
         version: '0.1.0',
       },
+      instructions: mcpServerInstructions,
     })
     assert.property(mcpResponse.result.capabilities, 'tools')
   })

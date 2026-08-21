@@ -20,6 +20,7 @@ import { searchSkillsTool } from '../../mcp/tools/search_skills.js'
 import { updateQuestionTool } from '../../mcp/tools/update_question.js'
 import { updateRubricTool } from '../../mcp/tools/update_rubric.js'
 import { updateSkillTool } from '../../mcp/tools/update_skill.js'
+import { mcpServerInstructions } from '#mcp/server_instructions'
 import type { McpTool } from '#mcp/types'
 
 @inject()
@@ -78,8 +79,7 @@ export default class McpHandlerService {
         version: '0.1.0',
       },
       {
-        instructions:
-          "Use Skills Practice tools to access only the authenticated user's data. Never assume access to another user's data.",
+        instructions: mcpServerInstructions,
       }
     )
 
