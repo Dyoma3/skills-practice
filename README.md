@@ -101,6 +101,9 @@ Attempts are the immutable practice log.
 
 Each attempt records the learner's response, the rubric-derived score, and immediate feedback. Attempts are appended, not updated.
 
+Deleting a skill is an explicit destructive exception: it recursively deletes descendant skills,
+their questions, and all associated attempts. Referenced rubrics remain in the shared catalog.
+
 Whether an attempt is a first exposure or reinforcement is derived by counting earlier attempts for the same question rather than storing additional state.
 
 ## Domain invariants
@@ -110,6 +113,8 @@ Whether an attempt is a first exposure or reinforcement is derived by counting e
 - Derive each rubric's maximum score from its criteria.
 - Prevent changes to rubric data after attempts exist.
 - Treat attempts as immutable.
+- Cascade skill deletion through descendant skills, questions, and attempts without deleting shared
+  rubrics.
 - Score by marking fulfilled criteria and summing their points, rather than assigning a score by judgment.
 
 These rules must remain consistent across every practice session so historical results are comparable.

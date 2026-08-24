@@ -21,7 +21,7 @@ const deleteSkillOutput = z.strictObject(outputSchema)
 const config = {
   title: 'Delete skill',
   description:
-    'Deletes an empty skill belonging to the authenticated Skills Practice user. Skills with children or questions cannot be deleted.',
+    'Deletes a skill belonging to the authenticated Skills Practice user. Descendant skills, questions, and attempts are deleted recursively; referenced rubrics are preserved.',
   inputSchema: deleteValidator.shape,
   outputSchema,
   annotations: {

@@ -2,7 +2,11 @@ import { test } from '@japa/runner'
 import type { ApiClient } from '@japa/api-client'
 import testUtils from '@adonisjs/core/services/test_utils'
 import type User from '#models/user'
+import Attempt from '#models/attempt'
+import Question from '#models/question'
+import Rubric from '#models/rubric'
 import Skill from '#models/skill'
+import { AttemptFactory } from '#database/factories/attempt_factory'
 import { QuestionFactory } from '#database/factories/question_factory'
 import { RubricFactory } from '#database/factories/rubric_factory'
 import { UserFactory } from '#database/factories/user_factory'
@@ -32,32 +36,41 @@ test.group('POST /mcp delete_skill', (group) => {
     assert.isNull(await Skill.find(skill.id))
   })
 
-  test('rejects a skill with children', async ({ assert, client }) => {
+  test('deletes all descendant skills', async ({ assert, client }) => {
     const parent = await createSkill(user, 'Parent skill')
     const child = await createSkill(user, 'Child skill', parent.id)
+    const grandchild = await createSkill(user, 'Grandchild skill', child.id)
 
     const response = await callDeleteSkill(client, user, parent.id)
 
     response.assertStatus(200)
 
-    const mcpError = parseMcpToolError(response.text())
-    assert.equal(mcpError.content[0].text, 'Cannot delete a skill with children')
-    assert.isNotNull(await Skill.find(parent.id))
-    assert.isNotNull(await Skill.find(child.id))
+    const mcpResponse = parseMcpEvent(response.text())
+    assert.deepEqual(mcpResponse.result.structuredContent, { id: parent.id })
+    assert.isNull(await Skill.find(parent.id))
+    assert.isNull(await Skill.find(child.id))
+    assert.isNull(await Skill.find(grandchild.id))
   })
 
-  test('rejects a skill with questions', async ({ assert, client }) => {
+  test('deletes questions and attempts while preserving rubrics', async ({ assert, client }) => {
     const skill = await createSkill(user, 'Practiced skill')
     const rubric = await RubricFactory.create()
-    await QuestionFactory.merge({ skillId: skill.id, rubricId: rubric.id }).create()
+    const question = await QuestionFactory.merge({
+      skillId: skill.id,
+      rubricId: rubric.id,
+    }).create()
+    const attempt = await AttemptFactory.merge({ questionId: question.id }).create()
 
     const response = await callDeleteSkill(client, user, skill.id)
 
     response.assertStatus(200)
 
-    const mcpError = parseMcpToolError(response.text())
-    assert.equal(mcpError.content[0].text, 'Cannot delete a skill with questions')
-    assert.isNotNull(await Skill.find(skill.id))
+    const mcpResponse = parseMcpEvent(response.text())
+    assert.deepEqual(mcpResponse.result.structuredContent, { id: skill.id })
+    assert.isNull(await Skill.find(skill.id))
+    assert.isNull(await Question.find(question.id))
+    assert.isNull(await Attempt.find(attempt.id))
+    assert.isNotNull(await Rubric.find(rubric.id))
   })
 
   test("rejects another user's skill", async ({ assert, client }) => {

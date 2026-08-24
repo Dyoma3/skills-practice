@@ -43,6 +43,9 @@ Question      -> Attempt
 - Once attempts use a rubric, do not mutate its scoring data. Create a new rubric instead so
   historical scores remain comparable.
 - Never update attempts in place. Corrections and reinforcement create new attempts.
+- Treat skill deletion as an explicit destructive exception to durable attempt history: deleting a
+  skill recursively deletes its descendants, questions, and attempts, while preserving referenced
+  rubrics in the shared catalog.
 - Derive first exposure versus reinforcement from earlier attempts for the same question; do not
   store redundant mutable state.
 - Keep every authenticated user's practice data isolated. Never assume access to another user's
