@@ -18,7 +18,10 @@ content generator, or chat transcript store.
 - A `Skill` is a node in a self-referencing tree. Root skills have no parent; intermediate skills
   organize decomposition; leaf skills are the independently trainable units.
 - A `Question` is a reusable exercise owned by exactly one leaf skill and evaluated by one rubric.
-  If the same prompt trains two skills, create two questions rather than sharing ownership.
+  Its difficulty is a positive integer relative to that skill. Keep the scale coarse and normally
+  within 1–10, while allowing values above 10 when established history or the user requires further
+  progression. If the same prompt trains two skills, create two questions rather than sharing
+  ownership.
 - A `Rubric` is a reusable catalog entry. Criteria describe observable evidence and map that
   evidence to points so evaluation is mechanical and repeatable.
 - An `Attempt` is an append-only practice event containing the response, rubric-derived score, and

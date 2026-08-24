@@ -1,7 +1,7 @@
 import type { HttpContext } from '@adonisjs/core/http'
 import { z } from 'zod'
 import QuestionSearchService from '#services/question/search'
-import { searchValidator } from '#validators/question'
+import { questionDifficultySchema, searchValidator } from '#validators/question'
 import type { McpTool } from '../types.js'
 
 // ### TOOL ###
@@ -16,6 +16,7 @@ const questionOutput = z.strictObject({
   id: z.uuid(),
   skillId: z.uuid(),
   rubricId: z.uuid(),
+  difficulty: questionDifficultySchema,
   prompt: z.string(),
   context: z.string().nullable(),
   answer: z.string().nullable(),
@@ -32,7 +33,7 @@ const searchQuestionsOutput = z.strictObject(searchQuestionsOutputSchema)
 const config = {
   title: 'Search questions',
   description:
-    "Searches the authenticated Skills Practice user's questions by optional prompt or context text and exact skill, with pagination.",
+    "Searches the authenticated Skills Practice user's questions by optional prompt or context text and exact skill, returning each question's difficulty with pagination.",
   inputSchema: searchValidator.shape,
   outputSchema: searchQuestionsOutputSchema,
   annotations: {

@@ -32,6 +32,7 @@ test.group('POST /mcp get_question', (group) => {
     const question = await QuestionFactory.merge({
       skillId: skill.id,
       rubricId: rubric.id,
+      difficulty: 4,
       prompt: 'Estimate requests per second.',
       context: 'There are 100 million daily requests.',
       answer: '100 million divided by 86,400 is approximately 1,157 requests per second.',
@@ -48,6 +49,7 @@ test.group('POST /mcp get_question', (group) => {
       id: question.id,
       skillId: skill.id,
       rubricId: rubric.id,
+      difficulty: 4,
       prompt: 'Estimate requests per second.',
       context: 'There are 100 million daily requests.',
       answer: '100 million divided by 86,400 is approximately 1,157 requests per second.',

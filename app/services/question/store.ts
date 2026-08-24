@@ -12,7 +12,10 @@ export default class QuestionStoreService {
   constructor(private ctx: HttpContext) {}
 
   async execute(input: unknown) {
-    const { skillId, rubricId, prompt, context, answer } = validateRequest(storeValidator, input)
+    const { skillId, rubricId, difficulty, prompt, context, answer } = validateRequest(
+      storeValidator,
+      input
+    )
     const skill = await Skill.findOrFail(skillId)
 
     await this.ctx.bouncer.with(QuestionPolicy).authorize('store', skill)
@@ -24,6 +27,7 @@ export default class QuestionStoreService {
     const rubric = await Rubric.findOrFail(rubricId)
     const question = await skill.related('questions').create({
       rubricId: rubric.id,
+      difficulty,
       prompt,
       context: context ?? null,
       answer: answer ?? null,

@@ -104,6 +104,7 @@ export class QuestionSchema extends BaseModel {
     'answer',
     'context',
     'createdAt',
+    'difficulty',
     'id',
     'prompt',
     'rubricId',
@@ -116,6 +117,8 @@ export class QuestionSchema extends BaseModel {
   declare context: string | null
   @column.dateTime({ autoCreate: true })
   declare createdAt: DateTime
+  @column()
+  declare difficulty: number
   @column({ isPrimary: true })
   declare id: string
   @column()

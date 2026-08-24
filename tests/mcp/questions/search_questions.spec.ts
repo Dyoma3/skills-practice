@@ -53,6 +53,8 @@ test.group('POST /mcp search_questions', (group) => {
       result.data.map((question: { id: string }) => question.id),
       [matchingByContext.id, matchingByPrompt.id]
     )
+    assert.equal(result.data[0].difficulty, matchingByContext.difficulty)
+    assert.equal(result.data[1].difficulty, matchingByPrompt.difficulty)
     assert.deepEqual(JSON.parse(mcpResponse.result.content[0].text), result)
   })
 

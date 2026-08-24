@@ -1,7 +1,7 @@
 import type { HttpContext } from '@adonisjs/core/http'
 import { z } from 'zod'
 import QuestionUpdateService from '#services/question/update'
-import { updateValidator } from '#validators/question'
+import { questionDifficultySchema, updateValidator } from '#validators/question'
 import type { McpTool } from '../types.js'
 
 // ### TOOL ###
@@ -16,6 +16,7 @@ const updateQuestionOutputSchema = {
   id: z.uuid(),
   skillId: z.uuid(),
   rubricId: z.uuid(),
+  difficulty: questionDifficultySchema,
   prompt: z.string(),
   context: z.string().nullable(),
   answer: z.string().nullable(),
@@ -27,7 +28,7 @@ const updateQuestionOutput = z.strictObject(updateQuestionOutputSchema)
 const config = {
   title: 'Update question',
   description:
-    'Updates the prompt, context, or reference answer of a question belonging to the authenticated Skills Practice user.',
+    'Updates the difficulty, prompt, context, or reference answer of a question belonging to the authenticated Skills Practice user.',
   inputSchema: updateValidator.shape,
   outputSchema: updateQuestionOutputSchema,
   annotations: {

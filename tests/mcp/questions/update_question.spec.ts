@@ -61,6 +61,23 @@ test.group('POST /mcp update_question', (group) => {
     assert.include(mcpError.content[0].text, 'At least one field must be provided')
   })
 
+  test('updates difficulty by itself', async ({ assert, client }) => {
+    const question = await createQuestion(user, 'Adaptive difficulty question')
+
+    const response = await callUpdateQuestion(client, user, {
+      questionId: question.id,
+      difficulty: 12,
+    })
+
+    response.assertStatus(200)
+
+    const result = parseMcpEvent(response.text()).result.structuredContent
+    assert.equal(result.difficulty, 12)
+
+    await question.refresh()
+    assert.equal(question.difficulty, 12)
+  })
+
   test("rejects another user's question", async ({ assert, client }) => {
     const otherUser = await UserFactory.create()
     const question = await createQuestion(otherUser, 'Other user question')

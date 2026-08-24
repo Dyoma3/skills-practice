@@ -87,7 +87,11 @@ Scoring is mechanical: mark the criteria that were fulfilled and sum their point
 
 Questions are reusable exercises. A prompt is authored once and may be presented repeatedly for reinforcement.
 
-Each question belongs to one leaf skill and uses one rubric. It may include scenario context and an optional reference answer.
+Each question belongs to one leaf skill and uses one rubric. It has a positive-integer difficulty
+relative to its skill and may include scenario context and an optional reference answer. Difficulty
+is intentionally coarse: most skills should fit within levels 1–10, and a simple progression may
+use 1/2/3 for easy/medium/hard. Values above 10 remain valid when the established history or the
+user requires further progression.
 
 - Without a reference answer, the rubric is the complete evaluation criterion.
 - With a reference answer, the rubric distributes points across the relevant parts of that answer.

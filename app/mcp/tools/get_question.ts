@@ -1,7 +1,7 @@
 import type { HttpContext } from '@adonisjs/core/http'
 import { z } from 'zod'
 import QuestionShowService from '#services/question/show'
-import { showValidator } from '#validators/question'
+import { questionDifficultySchema, showValidator } from '#validators/question'
 import { RubricTypes } from '#types/index'
 import type { McpTool } from '../types.js'
 
@@ -26,6 +26,7 @@ const getQuestionOutputSchema = {
   id: z.uuid(),
   skillId: z.uuid(),
   rubricId: z.uuid(),
+  difficulty: questionDifficultySchema,
   prompt: z.string(),
   context: z.string().nullable(),
   answer: z.string().nullable(),

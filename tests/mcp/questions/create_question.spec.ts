@@ -24,6 +24,7 @@ test.group('POST /mcp create_question', (group) => {
     const response = await callCreateQuestion(client, user, {
       skillId: skill.id,
       rubricId: rubric.id,
+      difficulty: 3,
       prompt: 'Estimate the peak request rate for this workload.',
       context: 'There are 100 million daily active users.',
       answer: 'Divide the daily request count by 86,400 and apply the peak multiplier.',
@@ -37,6 +38,7 @@ test.group('POST /mcp create_question', (group) => {
     assert.deepInclude(result, {
       skillId: skill.id,
       rubricId: rubric.id,
+      difficulty: 3,
       prompt: 'Estimate the peak request rate for this workload.',
       context: 'There are 100 million daily active users.',
       answer: 'Divide the daily request count by 86,400 and apply the peak multiplier.',
@@ -46,6 +48,47 @@ test.group('POST /mcp create_question', (group) => {
     const storedQuestion = await Question.findOrFail(result.id)
     assert.equal(storedQuestion.skillId, skill.id)
     assert.equal(storedQuestion.rubricId, rubric.id)
+    assert.equal(storedQuestion.difficulty, 3)
+  })
+
+  test('describes an open-ended coarse difficulty scale in the MCP schema', async ({
+    assert,
+    client,
+  }) => {
+    const response = await callListTools(client, user)
+
+    response.assertStatus(200)
+
+    const tools = parseMcpEvent(response.text()).result.tools
+    const tool = tools.find(({ name }: { name: string }) => name === 'create_question')
+    const difficulty = tool.inputSchema.properties.difficulty
+
+    assert.equal(difficulty.type, 'integer')
+    assert.equal(difficulty.exclusiveMinimum, 0)
+    assert.isAbove(difficulty.maximum, 10)
+    assert.include(difficulty.description, 'levels 1–10')
+    assert.include(difficulty.description, 'Values above 10 are allowed')
+  })
+
+  test('requires difficulty to be a positive integer', async ({ assert, client }) => {
+    const skill = await createSkill(user, 'Difficulty validation')
+    const rubric = await RubricFactory.create()
+
+    for (const difficulty of [0, 1.5]) {
+      const prompt = `Invalid difficulty ${difficulty}`
+      const response = await callCreateQuestion(client, user, {
+        skillId: skill.id,
+        rubricId: rubric.id,
+        difficulty,
+        prompt,
+      })
+
+      response.assertStatus(200)
+
+      const mcpError = parseMcpToolError(response.text())
+      assert.include(mcpError.content[0].text, 'difficulty')
+      assert.isNull(await Question.findBy('prompt', prompt))
+    }
   })
 
   test('rejects questions under a non-leaf skill', async ({ assert, client }) => {
@@ -61,6 +104,7 @@ test.group('POST /mcp create_question', (group) => {
     const response = await callCreateQuestion(client, user, {
       skillId: parent.id,
       rubricId: rubric.id,
+      difficulty: 2,
       prompt: 'Invalid branch question',
     })
 
@@ -79,6 +123,7 @@ test.group('POST /mcp create_question', (group) => {
     const response = await callCreateQuestion(client, user, {
       skillId: otherSkill.id,
       rubricId: rubric.id,
+      difficulty: 2,
       prompt: 'Unauthorized question',
     })
 
@@ -99,6 +144,7 @@ test.group('POST /mcp create_question', (group) => {
       {
         skillId: skill.id,
         rubricId: rubric.id,
+        difficulty: 2,
         prompt: 'Read only question',
       },
       ['mcp:read']
@@ -137,5 +183,17 @@ async function callCreateQuestion(
         name: 'create_question',
         arguments: arguments_,
       },
+    })
+}
+
+async function callListTools(client: ApiClient, authenticatedUser: User) {
+  return client
+    .post('/mcp')
+    .headers(await getMcpHeaders(authenticatedUser))
+    .json({
+      jsonrpc: '2.0',
+      id: 1,
+      method: 'tools/list',
+      params: {},
     })
 }

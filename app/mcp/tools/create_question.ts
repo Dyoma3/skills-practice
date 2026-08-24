@@ -1,7 +1,7 @@
 import type { HttpContext } from '@adonisjs/core/http'
 import { z } from 'zod'
 import QuestionStoreService from '#services/question/store'
-import { storeValidator } from '#validators/question'
+import { questionDifficultySchema, storeValidator } from '#validators/question'
 import type { McpTool } from '../types.js'
 
 // ### TOOL ###
@@ -16,6 +16,7 @@ const createQuestionOutputSchema = {
   id: z.uuid(),
   skillId: z.uuid(),
   rubricId: z.uuid(),
+  difficulty: questionDifficultySchema,
   prompt: z.string(),
   context: z.string().nullable(),
   answer: z.string().nullable(),
@@ -27,7 +28,7 @@ const createQuestionOutput = z.strictObject(createQuestionOutputSchema)
 const config = {
   title: 'Create question',
   description:
-    'Creates a reusable practice question under a leaf skill belonging to the authenticated Skills Practice user, using a rubric from the shared catalog.',
+    'Creates a reusable practice question with a relative difficulty under a leaf skill belonging to the authenticated Skills Practice user, using a rubric from the shared catalog.',
   inputSchema: storeValidator.shape,
   outputSchema: createQuestionOutputSchema,
   annotations: {
