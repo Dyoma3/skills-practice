@@ -1,0 +1,28 @@
+{
+  "name": "skills-practice-plugin",
+  "version": "0.1.0",
+  "description": "Design and persist deliberate-practice skills, rubrics, and questions through Skills Practice.",
+  "author": {
+    "name": "Dyoma3",
+    "url": "https://github.com/Dyoma3"
+  },
+  "homepage": "https://github.com/Dyoma3/skills-practice",
+  "repository": "https://github.com/Dyoma3/skills-practice",
+  "license": "MIT",
+  "keywords": ["deliberate-practice", "skills", "rubrics", "education", "mcp"],
+  "skills": "./skills/",
+  "mcpServers": "./.mcp.json",
+  "interface": {
+    "displayName": "Skills Practice",
+    "shortDescription": "Design deliberate practice with persistent history",
+    "longDescription": "Turn a learning goal or application-modeling exercise into a minimal trainable skill tree, an observable point-based rubric, and a reusable first question stored in Skills Practice.",
+    "developerName": "Dyoma3",
+    "category": "Education",
+    "capabilities": ["Interactive", "Read", "Write"],
+    "websiteURL": "https://github.com/Dyoma3/skills-practice",
+    "defaultPrompt": [
+      "Turn my practice goal into a skill, rubric, and first question.",
+      "Model this application domain as a deliberate-practice exercise."
+    ]
+  }
+}
