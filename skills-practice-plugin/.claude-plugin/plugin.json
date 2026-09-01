@@ -1,0 +1,17 @@
+{
+  "$schema": "https://json.schemastore.org/claude-code-plugin-manifest.json",
+  "name": "skills-practice-plugin",
+  "displayName": "Skills Practice",
+  "version": "0.1.0",
+  "description": "Design and persist deliberate-practice skills, rubrics, and questions through Skills Practice.",
+  "author": {
+    "name": "Dyoma3",
+    "url": "https://github.com/Dyoma3"
+  },
+  "homepage": "https://github.com/Dyoma3/skills-practice",
+  "repository": "https://github.com/Dyoma3/skills-practice",
+  "license": "MIT",
+  "keywords": ["deliberate-practice", "skills", "rubrics", "education", "mcp"],
+  "skills": "./skills/",
+  "mcpServers": "./.mcp.json"
+}
