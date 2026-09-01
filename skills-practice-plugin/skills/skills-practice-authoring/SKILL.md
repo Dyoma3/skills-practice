@@ -1,6 +1,6 @@
 ---
 name: skills-practice-authoring
-description: Design and create a Skills Practice skill tree, reusable rubric, and first question from a learning goal or modeling exercise. Use when the user wants to start practicing a capability, turn an application brief into an entity-modeling exercise, or persist the initial practice setup. Do not use for answering an already-created practice question or scoring an attempt.
+description: Design and create a complete Skills Practice starter bundle containing a skill tree, reusable rubric, and first question. Use when the user wants all three parts together from a learning goal or modeling exercise. Do not use when the user only wants to define or create a practice skill, answer an existing question, or score an attempt.
 ---
 
 # Skills Practice Authoring
