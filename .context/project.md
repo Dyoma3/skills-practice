@@ -17,11 +17,12 @@ content generator, or chat transcript store.
 
 - A `Skill` is a node in a self-referencing tree. Root skills have no parent; intermediate skills
   organize decomposition; leaf skills are the independently trainable units.
-- A `Question` is a reusable exercise owned by exactly one leaf skill and evaluated by one rubric.
-  Its difficulty is a positive integer relative to that skill. Keep the scale coarse and normally
-  within 1–10, while allowing values above 10 when established history or the user requires further
-  progression. If the same prompt trains two skills, create two questions rather than sharing
-  ownership.
+- A `Question` is a reusable exercise owned by exactly one skill and evaluated by one rubric. A new
+  question can be created only while that skill has no children. The skill may later receive
+  children without moving or deleting its existing questions. Question difficulty is a positive
+  integer relative to its skill. Keep the scale coarse and normally within 1–10, while allowing
+  values above 10 when established history or the user requires further progression. If the same
+  prompt trains two skills, create two questions rather than sharing ownership.
 - A `Rubric` is a reusable catalog entry. Criteria describe observable evidence and map that
   evidence to points so evaluation is mechanical and repeatable.
 - An `Attempt` is an append-only practice event containing the response, rubric-derived score, and
@@ -31,7 +32,7 @@ Relationship summary:
 
 ```text
 Skill(parent) -> Skill(children)
-Skill(leaf)   -> Question
+Skill         -> Question
 Rubric        -> Question
 Question      -> Attempt
 ```
@@ -39,7 +40,8 @@ Question      -> Attempt
 ## Non-Negotiable Invariants
 
 - Prevent cycles in the skill tree.
-- Allow questions only on leaf skills.
+- Allow new questions only on skills without children.
+- Allow any skill to receive children without moving or deleting its existing questions.
 - Derive a rubric's maximum score from its criterion points.
 - Score attempts by marking fulfilled criteria and summing their points; do not assign a holistic
   score by judgment.

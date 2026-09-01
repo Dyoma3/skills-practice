@@ -40,11 +40,11 @@ Determina primero si será una habilidad raíz o una subhabilidad. Si será subh
 
 1. Busca padres plausibles y recomienda uno cuando el encaje sea claro.
 2. Permite que el usuario seleccione otro padre o vuelva a la opción raíz.
-3. Comprueba con `search_questions` si el padre elegido ya tiene preguntas. Una habilidad con
-   preguntas es una hoja y Skills Practice no permite agregarle hijos; en ese caso, explica el
-   conflicto y ayuda a elegir otra ubicación sin modificar los registros existentes.
-4. Conserva el `id` del padre elegido para la creación posterior, sin exponerlo como una decisión
+3. Conserva el `id` del padre elegido para la creación posterior, sin exponerlo como una decisión
    que el usuario deba tomar.
+
+Cualquier habilidad puede recibir hijos, incluso si ya tiene preguntas. No uses sus preguntas para
+descartarla como padre; éstas permanecen vinculadas después de agregar la subhabilidad.
 
 Usa controles de selección cuando el host los ofrezca y la decisión sea finita, como raíz frente a
 subhabilidad o la elección entre pocos padres. Para comprender el contenido de la habilidad,

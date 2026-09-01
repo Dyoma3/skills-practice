@@ -28,7 +28,7 @@ const createQuestionOutput = z.strictObject(createQuestionOutputSchema)
 const config = {
   title: 'Create question',
   description:
-    'Creates a reusable practice question with a relative difficulty under a leaf skill belonging to the authenticated Skills Practice user, using a rubric from the shared catalog.',
+    'Creates a reusable practice question with a relative difficulty under a skill that currently has no children and belongs to the authenticated Skills Practice user, using a rubric from the shared catalog.',
   inputSchema: storeValidator.shape,
   outputSchema: createQuestionOutputSchema,
   annotations: {

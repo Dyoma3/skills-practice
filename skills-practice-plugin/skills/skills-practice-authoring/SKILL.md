@@ -18,8 +18,8 @@ Create the smallest useful practice setup while keeping the interaction lightwei
   genuinely needs decomposition. A narrow capability may be a root leaf with no parent.
 - Keep the initial tree minimal. Do not create speculative future branches merely to make the tree
   look complete.
-- Attach questions only to leaf skills. Never add a child under a practice skill that already has
-  questions.
+- Create new questions only on skills that currently have no children. Existing questions do not
+  prevent a skill from receiving children later and remain attached after that decomposition.
 
 ## Draft the first bundle
 

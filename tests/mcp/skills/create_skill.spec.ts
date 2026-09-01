@@ -77,28 +77,26 @@ test.group('POST /mcp create_skill', (group) => {
     assert.isNull(await Skill.query().where('name', 'Unauthorized child').first())
   })
 
-  test('rejects adding a child to a skill that already has questions', async ({
-    assert,
-    client,
-  }) => {
+  test('creates a child under a skill that already has questions', async ({ assert, client }) => {
     const parent = await createSkill(user, 'Practiced skill')
     const rubric = await RubricFactory.create()
-    await QuestionFactory.merge({ skillId: parent.id, rubricId: rubric.id }).create()
+    const question = await QuestionFactory.merge({
+      skillId: parent.id,
+      rubricId: rubric.id,
+    }).create()
 
     const response = await callCreateSkill(client, user, {
       parentId: parent.id,
-      name: 'Invalid child',
-      description: 'Would turn the practiced skill into a branch',
+      name: 'Valid child',
+      description: 'Decomposes the practiced skill while preserving its question',
     })
 
     response.assertStatus(200)
 
-    const mcpError = parseMcpToolError(response.text())
-    assert.equal(
-      mcpError.content[0].text,
-      'Cannot add a child to a skill that already has questions'
-    )
-    assert.isNull(await Skill.query().where('name', 'Invalid child').first())
+    const result = parseMcpEvent(response.text()).result.structuredContent
+    assert.equal(result.parentId, parent.id)
+    assert.isNotNull(await Skill.find(result.id))
+    assert.equal((await question.refresh()).skillId, parent.id)
   })
 
   test('requires the mcp:write scope', async ({ assert, client }) => {

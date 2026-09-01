@@ -28,7 +28,8 @@ This repository provides the persistent domain model and MCP transport needed to
 The domain is built around a few constraints:
 
 1. A broad skill is decomposed into subskills that can be trained in isolation.
-2. Questions belong to leaf skills; intermediate skills are aggregation containers.
+2. New questions are created on skills without children. A practiced skill may later be decomposed;
+   its existing questions remain attached.
 3. Feedback is immediate and tied to explicit, discriminating criteria.
 4. Rubrics remain stable so scores are comparable across sessions.
 5. Questions are reusable. Repeating a question is reinforcement, not duplication.
@@ -64,7 +65,9 @@ erDiagram
 
 Skills form a self-referencing tree. A subskill is another skill row; there is no separate subskills table or pivot table.
 
-A root skill has no parent. Questions belong only to leaf skills; intermediate nodes organize the decomposition and aggregate the progress of their descendant leaves. The tree must remain acyclic.
+A root skill has no parent. Skills without children are leaves, but any skill may later receive
+children, including one that already has questions. Those questions remain attached after the
+skill becomes an intermediate node. The tree must remain acyclic.
 
 Sibling order is deliberately not part of the domain. Different decompositions may emphasize sequence, components, or error types, so presentation can choose its own ordering.
 
@@ -87,11 +90,12 @@ Scoring is mechanical: mark the criteria that were fulfilled and sum their point
 
 Questions are reusable exercises. A prompt is authored once and may be presented repeatedly for reinforcement.
 
-Each question belongs to one leaf skill and uses one rubric. It has a positive-integer difficulty
-relative to its skill and may include scenario context and an optional reference answer. Difficulty
-is intentionally coarse: most skills should fit within levels 1–10, and a simple progression may
-use 1/2/3 for easy/medium/hard. Values above 10 remain valid when the established history or the
-user requires further progression.
+Each question belongs to one skill and uses one rubric. A new question can be added only while that
+skill has no children. Adding children later does not move or delete its existing questions. Each
+question has a positive-integer difficulty relative to its skill and may include scenario context
+and an optional reference answer. Difficulty is intentionally coarse: most skills should fit within
+levels 1–10, and a simple progression may use 1/2/3 for easy/medium/hard. Values above 10 remain
+valid when the established history or the user requires further progression.
 
 - Without a reference answer, the rubric is the complete evaluation criterion.
 - With a reference answer, the rubric distributes points across the relevant parts of that answer.
@@ -113,7 +117,8 @@ Whether an attempt is a first exposure or reinforcement is derived by counting e
 ## Domain invariants
 
 - Prevent cycles in the skill tree.
-- Allow questions only on leaf skills.
+- Allow new questions only on skills without children.
+- Allow any skill to receive children without moving or deleting its existing questions.
 - Derive each rubric's maximum score from its criteria.
 - Prevent changes to rubric data after attempts exist.
 - Treat attempts as immutable.
