@@ -1,8 +1,0 @@
-{
-  "mcpServers": {
-    "skills-practice": {
-      "type": "http",
-      "url": "https://skills-practice.onrender.com/mcp"
-    }
-  }
-}

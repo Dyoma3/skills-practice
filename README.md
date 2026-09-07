@@ -145,6 +145,19 @@ A global score scale has not been selected yet. Before implementing skill-level 
 
 ## Local setup
 
+The local workspace contains two independent repositories:
+
+```text
+skills-practice/                  # local container, not a Git repository
+├── skills-practice-app/          # this backend repository
+└── skills-practice-plugin/       # standalone plugin and marketplace
+```
+
+Run the commands below from `skills-practice-app/`. Edit plugin files directly in the sibling
+`skills-practice-plugin/` repository; no synchronization step is needed. Each repository has its
+own Git history and remote. Moving the backend checkout locally does not change the repository
+root on GitHub or the root directory used by Render.
+
 Prerequisites:
 
 - Node.js and npm
