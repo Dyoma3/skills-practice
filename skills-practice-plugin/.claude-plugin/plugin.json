@@ -13,5 +13,5 @@
   "license": "MIT",
   "keywords": ["deliberate-practice", "skills", "rubrics", "education", "mcp"],
   "skills": "./skills/",
-  "mcpServers": "./.mcp.json"
+  "mcpServers": "./.mcp.claude.json"
 }

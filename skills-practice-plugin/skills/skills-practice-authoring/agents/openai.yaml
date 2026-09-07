@@ -9,4 +9,4 @@ dependencies:
       value: 'skills-practice'
       description: 'Persist and query deliberate-practice skills, rubrics, questions, and attempts.'
       transport: 'streamable_http'
-      url: 'http://localhost:3333/mcp'
+      url: 'https://skills-practice.onrender.com/mcp'

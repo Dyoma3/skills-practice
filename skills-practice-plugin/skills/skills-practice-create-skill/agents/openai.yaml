@@ -9,4 +9,4 @@ dependencies:
       value: 'skills-practice'
       description: 'Consulta y crea habilidades humanas en Skills Practice.'
       transport: 'streamable_http'
-      url: 'http://localhost:3333/mcp'
+      url: 'https://skills-practice.onrender.com/mcp'
