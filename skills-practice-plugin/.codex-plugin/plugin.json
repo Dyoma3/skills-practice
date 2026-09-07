@@ -11,6 +11,7 @@
   "license": "MIT",
   "keywords": ["deliberate-practice", "skills", "rubrics", "education", "mcp"],
   "skills": "./skills/",
+  "apps": "./.app.json",
   "mcpServers": "./.mcp.json",
   "interface": {
     "displayName": "Skills Practice",
